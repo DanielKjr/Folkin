@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+public enum CardType { BASECARD, SKILLCARD}
+public enum TagType { SKILL, ITEM}
+
 public class Card : MonoBehaviour
 {
     public int ID { get; set; }
@@ -13,6 +16,10 @@ public class Card : MonoBehaviour
     public TextMeshProUGUI tagText;
     public Image[] cardIcons;
     public Image sillhuette;
+    public int[] iconValues;
+    public string SpritePath { get; set; }
+    public CardType CType { get; set; }
+    public TagType TType { get; set; }
 
     public Card(string TitleText, string DescriptionText, string TypeText, string TagText, Image[] cardIcons, Image sillhuette)
     {
@@ -22,6 +29,14 @@ public class Card : MonoBehaviour
         tagText.text = TagText;
         this.cardIcons = cardIcons;
         this.sillhuette = sillhuette;
+    }
+    public Card(string titleText, string description, CardType cardType, TagType tagType, int[] icons)
+    {
+
+    }
+    public Card(string titleText, string description, string cardType, TagType tagType, string tagText, int[] icons, string sprite)
+    {
+
     }
 
     public Card()
