@@ -6,6 +6,7 @@ using TMPro;
 
 public class Card : MonoBehaviour
 {
+    public int ID { get; set; }
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI typeText;
@@ -21,6 +22,11 @@ public class Card : MonoBehaviour
         tagText.text = TagText;
         this.cardIcons = cardIcons;
         this.sillhuette = sillhuette;
+    }
+
+    public Card()
+    {
+
     }
     public void SetCard()
     {
