@@ -21,6 +21,7 @@ public class CardManager : DatabaseHandler
         }
     }
 
+    //Search functions
 
     /// <summary>
     /// Returns a Card object that matches the Name of the card and the Deck ID
@@ -28,7 +29,7 @@ public class CardManager : DatabaseHandler
     /// <param name="cardName"></param>
     /// <param name="deckID"></param>
     /// <returns></returns>
-    protected Card FindFromDb(string cardName, int deckID)
+    public Card FindFromDb(string cardName, int deckID)
     {
 
         Open();
@@ -68,6 +69,24 @@ public class CardManager : DatabaseHandler
     }
 
     /// <summary>
+    /// Returns a card from the current deck that matches the name
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="deck"></param>
+    /// <returns></returns>
+    public Card FindFromDeck(string name, Deck deck)
+    {
+
+        Card? card = deck.cards.Find(x => x.name == name);
+
+        return card;
+
+
+    }
+
+    //Edit functions
+
+    /// <summary>
     /// Deletes a card from the matching Deck and inserts a new one.
     /// </summary>
     /// <param name="deckID"></param>
@@ -97,13 +116,14 @@ public class CardManager : DatabaseHandler
         Close();
     }
 
+    //SaveFunction
 
     /// <summary>
     /// Saves card to the database with the matching deck
     /// </summary>
     /// <param name="deckId"></param>
     /// <param name="card"></param>
-    public void SaveToDb(int deckId, Card card)
+    public void SaveCardToDb(int deckId, Card card)
     {
         Open();
 
@@ -125,5 +145,37 @@ public class CardManager : DatabaseHandler
 
     }
 
+
+    //Delete functions
+
+    /// <summary>
+    /// Deletes all cards in database with the given name. 
+    /// </summary>
+    /// <param name="name"></param>
+    public void DeleteFromDatabase(string name)
+    {
+        Open();
+
+        var cmd = new SqliteCommand($"DELETE FROM Card WHERE Title='{name}'", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+
+        Close();
+
+    }
+
+    /// <summary>
+    /// Deletes all cards in database that matches the title of the card passed through the parameter.
+    /// </summary>
+    /// <param name="card"></param>
+    public void DeleteFromDatabase(Card card)
+    {
+        Open();
+
+        var cmd = new SqliteCommand($"DELETE FROM Card WHERE Title='{card.titleText}'", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+        Close();
+    }
 
 }
