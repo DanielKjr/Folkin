@@ -56,10 +56,33 @@ public class DeckManager : DatabaseHandler
         }
 
         Close();
+        deck.ID = ID;
         currentDeck = deck;
         return deck;
 
     }
+
+    public void SaveDeckToDb(Deck deck)
+    {
+        Open();
+
+        var cmd = new SqliteCommand($"DELETE FROM Card WHERE DeckID='{deck.ID}'", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+        cmd = new SqliteCommand($"DELETE FROM Deck where ID='{deck.ID}'", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+        cmd = new SqliteCommand($"INSERT INTO Deck (ID, UserID, Name) VALUES ('null', '{deck.ID}', {deck.Name}",(SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+        foreach (Card card in deck.cards)
+        {
+            CardManager.Instance.SaveCardToDb(deck.ID, card);
+        }
+
+        Close();
+    }
+
 
     public void DeleteDeck(int ID, string name)
     {
@@ -67,7 +90,24 @@ public class DeckManager : DatabaseHandler
         //TODO hav noget confirmation 
         var cmd = new SqliteCommand($"DELETE FROM Deck WHERE ID={ID} AND Name={name}", (SqliteConnection)connection);
 
+
        // cmd.ExecuteNonQuery();
+
+        Close();
+    }
+
+    public void DeleteDeck(Deck deck)
+    {
+        Open();
+        //TODO hav noget confirmation 
+        var cmd = new SqliteCommand($"DELETE FROM Deck WHERE ID={deck.ID} AND Name={deck.Name}", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+        foreach (Card card in deck.cards)
+        {
+            CardManager.Instance.DeleteFromDatabase(card);
+        }
+
+       
 
         Close();
     }
