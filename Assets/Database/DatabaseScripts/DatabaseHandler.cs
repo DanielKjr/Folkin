@@ -13,9 +13,49 @@ public class DatabaseHandler
     protected SQLiteDatabaseProvider provider;
     protected IDbConnection connection;
 
+    public IDbConnection Connection
+    {
+        get
+        {
+            if (connection == null)
+            {
+                connection = provider.CreateConnection();
+                          
+            }
+            return connection;
+        }
+       
+    }
+
+
+    public static bool IsUnitTesting { get; set; }
+    public static bool DBIsMade { get; set; }
+
     public DatabaseHandler()
     {
-        provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; new=False");
+        if (!IsUnitTesting)
+        {
+            provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; New=False");
+        }
+        else
+        {
+            provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        }
+       
+        //if (!IsUnitTesting)
+        //{
+        //    provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; new=False");
+        //}
+        //else if (IsUnitTesting && !DBIsMade)
+        //{
+        //    provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        //    DBIsMade = true;
+        //}
+        //else
+        //{
+        //    provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3");
+        //}
+
     }
 
     // Start is called before the first frame update
@@ -51,7 +91,7 @@ public class DatabaseHandler
         }
     }
 
-   
+
 
 
 
