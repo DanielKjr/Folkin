@@ -24,7 +24,7 @@ public class CardCreator : MonoBehaviour
     public GameObject CardSilhuettePrefab;
     public GameObject CardIconPrefab;
     private bool spacereleased = true;
-
+    private int[] iconTags;
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +37,7 @@ public class CardCreator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && spacereleased)
         {
-            CreateCard("axe", "axe", CardType.BASECARD, "axe", "axe", Icons, "Sillhuettes/AxeSilhuette");
+            CreateCard("axe", "axe", CardType.BASECARD, "axe", "axe", new int[3] {3, 4, 1} , "Sillhuettes/AxeSilhuette");
             //         string, string, enum, string, string, int[], string
         }
         if (Input.GetKeyUp(KeyCode.Space))
@@ -82,13 +82,13 @@ public class CardCreator : MonoBehaviour
         }
     }
 
-    void CreateCard(string title, string type, CardType ttype, string description, string tags, GameObject[] icons, string silhuettepath)
+    void CreateCard(string title, string type, CardType ttype, string description, string tags, int[] iconValues, string silhuettepath)
     {
         //omskriv ikoner til at den først finder dem frem hernede udfra et array af ints den får, når man kalder metoden
         var card = Instantiate(cardPrefab, new Vector2(5, 5), Quaternion.identity).GetComponent<Card>();
-        card.SetCard(title, type, ttype, description, tags, icons, silhuettepath);
+        card.SetCard(title, type, ttype, description, tags, iconValues, silhuettepath);
         var cardCanvas = card.GetComponentInChildren<Canvas>();
-
+        iconTags = iconValues;
         Image cardPaper = cardCanvas.GetComponentInChildren<Image>();
         switch (ttype)
         {
@@ -124,7 +124,7 @@ public class CardCreator : MonoBehaviour
             int iconOffsetY = -125;
             int iconCount = 0;
 
-            foreach (var icon in icons)
+            foreach (var icon in Icons)
             {
                 var cardIcon = Instantiate(CardIconPrefab, Vector2.zero, Quaternion.identity);
 

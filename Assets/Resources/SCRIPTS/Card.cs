@@ -11,7 +11,6 @@ public class Card : MonoBehaviour
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI typeText;
     public TextMeshProUGUI tagText;
-    public GameObject[] cardIcons;
     public int[] iconValues;
     public Image sillhuette;
     public string SpritePath { get; set; }
@@ -22,13 +21,13 @@ public class Card : MonoBehaviour
 
     }
 
-    public void SetCard(string TitleText, string TypeText, CardType cardType, string DescriptionText, string TagText, GameObject[] cardIcons, string silhuettePath)
+    public void SetCard(string TitleText, string TypeText, CardType cardType, string DescriptionText, string TagText, int[] iconValues, string silhuettePath)
     {
         titleText.text = TitleText;
         descriptionText.text = DescriptionText;
         typeText.text = TypeText;
         tagText.text = TagText;
-        this.cardIcons = cardIcons;
+        this.iconValues = iconValues;
         //husk at sætte disse inde i prefabben
     }
     // Start is called before the first frame update
