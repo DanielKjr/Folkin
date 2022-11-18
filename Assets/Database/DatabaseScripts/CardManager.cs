@@ -1,5 +1,8 @@
 ﻿using Mono.Data.Sqlite;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using Unity.Plastic.Antlr3.Runtime.Tree;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.U2D.Common;
@@ -29,10 +32,10 @@ public class CardManager : DatabaseHandler
     /// <param name="cardName"></param>
     /// <param name="deckID"></param>
     /// <returns></returns>
-    public Card FindFromDb(string cardName, int deckID)
+    public List<CardData> FindFromDb(string cardName, int deckID)
     {
-
-        Open();
+        List<CardData> cards = new List<CardData>();
+        //Open();
 
         var cmd = new SqliteCommand($"SELECT Title, Type, Tag, TagText, Description, Icon, Sprite " +
             $"FROM Card" +
@@ -42,30 +45,91 @@ public class CardManager : DatabaseHandler
 
         var dataRead = cmd.ExecuteReader();
 
-        //retrieve all columns from database
-        string title = dataRead.GetString(0);
-        string type = dataRead.GetString(1);
-        int tag = dataRead.GetInt32(2);
-        string tagText = dataRead.GetString(3);
-        string description = dataRead.GetString(4);
-        string icon = dataRead.GetString(5);
-        string sprite = dataRead.GetString(6);
-
-        //divide into strings using commas
-        string[] iconSplit = icon.Split(',');
-        int[] iconValues = new int[iconSplit.Length];
-
-
-        for (int i = 0; i < iconSplit.Length; i++)
+        while (dataRead.Read())
         {
-            //Convert to integer
-            iconValues[i] = int.Parse(iconSplit[i]);
+            //retrieve all columns from database
+            string title = dataRead.GetString(0);
+            string type = dataRead.GetString(1);
+            int tag = dataRead.GetInt32(2);
+            string tagText = dataRead.GetString(3);
+            string description = dataRead.GetString(4);
+            string icon = dataRead.GetString(5);
+            string sprite = dataRead.GetString(6);
+
+            //divide into strings using commas
+            string[] iconSplit = icon.Split(',');
+            int[] iconValues = new int[iconSplit.Length];
+
+
+            for (int i = 0; i < iconSplit.Length; i++)
+            {
+                //Convert to integer
+                iconValues[i] = int.Parse(iconSplit[i]);
+            }
+
+            cards.Add(new CardData(title, description, type, (TagType)tag, tagText, iconValues, sprite) { DeckID = deckID });
         }
 
-        Card card = new Card(title, description, type, (TagType)tag, tagText, iconValues, sprite) { SpritePath = sprite, iconValues = iconValues };
 
 
-        return card;
+        return cards;
+    }
+
+
+    /// <summary>
+    /// Overload used by the unit tests
+    /// </summary>
+    /// <param name="cardName"></param>
+    /// <param name="deckID"></param>
+    /// <param name="handler"></param>
+    /// <returns></returns>
+    public List<CardData> FindFromDb(string cardName, int deckID, DatabaseHandler handler)
+    {
+        List<CardData> cards = new List<CardData>();
+        //Open();
+
+        var cmd = new SqliteCommand($"SELECT * FROM Card" +
+            $" WHERE DeckID='{deckID}' " +
+            $"AND Title='{cardName}'",
+            (SqliteConnection)handler.Connection);
+
+        var dataRead = cmd.ExecuteReader();
+
+        while (dataRead.Read())
+        {
+
+            //retrieve all columns from database
+            //var id = dataRead.GetInt32(0);
+            //var deckId = dataRead.GetInt32(1);
+            var title = dataRead.GetString(2);
+            var type = dataRead.GetString(3);
+            var tag = dataRead.GetInt32(4);
+            var tagText = dataRead.GetString(5);
+            var description = dataRead.GetString(6);
+            var icon = dataRead.GetString(7);
+            var sprite = dataRead.GetString(8);
+
+            //divide into strings using commas
+            string[] iconSplit = icon.Split(',');
+            int[] iconValues = new int[iconSplit.Length];
+
+
+            for (int i = 0; i < iconSplit.Length; i++)
+            {
+                //Convert to integer
+                if (char.IsDigit(iconSplit[i][i]))
+                {
+                    iconValues[i] = int.Parse(iconSplit[i]);
+                }
+               
+            }
+
+            cards.Add(new CardData(title, description, type, (TagType)tag, tagText, iconValues, sprite) { DeckID = deckID });
+        }
+
+
+
+        return cards;
     }
 
     /// <summary>
@@ -123,27 +187,63 @@ public class CardManager : DatabaseHandler
     /// </summary>
     /// <param name="deckId"></param>
     /// <param name="card"></param>
-    public void SaveCardToDb(int deckId, Card card)
+    public void SaveCardToDb(int deckId, CardData card)
     {
-        Open();
+        // Open();
 
-        var cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite VALUES " +
+        var cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
             $"('null', " +
             $" '{deckId}', " +
-            $" '{card.titleText}', " +
-            $" '{card.typeText}'," +
+            $" '{card.TitleText}', " +
+            $" '{card.TypeText}'," +
             $" '{(int)card.TType}', " +
-            $" '{card.tagText}'," +
-            $" '{card.descriptionText}'," +
-            $" '{card.iconValues}'," +
-            $" '{card.SpritePath}'",
+            $" '{card.TagText}'," +
+            $" '{card.DescriptionText}'," +
+            $" '{card.IconValues}'," +
+            $" '{card.SpritePath}')",
             (SqliteConnection)connection);
 
+        //lav overload der giver connection med
         cmd.ExecuteNonQuery();
 
-        Close();
+        //   Close();
 
     }
+
+
+    /// <summary>
+    /// Overload used for unit tests
+    /// </summary>
+    /// <param name="deckId"></param>
+    /// <param name="card"></param>
+    /// <param name="handler"></param>
+    public void SaveCardToDb(int deckId, CardData card, DatabaseHandler handler)
+    {
+        // Open();
+        string iconString = string.Empty;
+       // iconString = card.IconValues.ToString();
+      
+        
+
+        var cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
+            $"(null, " +
+            $" '{deckId}', " +
+            $" '{card.TitleText}', " +
+            $" '{card.TypeText}'," +
+            $" '{(int)card.TType}', " +
+            $" '{card.TagText}'," +
+            $" '{card.DescriptionText}'," +
+            $" '{card.IconValues}'," +
+            $" '{card.SpritePath}')",
+            (SqliteConnection)handler.Connection);
+
+       
+        cmd.ExecuteNonQuery();
+
+        //   Close();
+
+    }
+
 
 
     //Delete functions

@@ -30,7 +30,7 @@ public class DeckManager : DatabaseHandler
         Deck deck = new Deck();
         Open();
 
-        var cmd = new SqliteCommand($"SELECT Title, Type, Tag, TagText, Description, Icon, Sprite FROM 'Card' WHERE DeckID={ID}", (SqliteConnection)connection);
+        var cmd = new SqliteCommand($"SELECT Title, Type, Tag, TagText, Description, Icon, Sprite FROM Card WHERE DeckID={ID}", (SqliteConnection)connection);
         var dataRead = cmd.ExecuteReader();
 
         while (dataRead.Read())
@@ -69,13 +69,13 @@ public class DeckManager : DatabaseHandler
         var cmd = new SqliteCommand($"DELETE FROM Card WHERE DeckID='{deck.ID}'", (SqliteConnection)connection);
         cmd.ExecuteNonQuery();
 
-        cmd = new SqliteCommand($"DELETE FROM Deck where ID='{deck.ID}'", (SqliteConnection)connection);
+        cmd = new SqliteCommand($"DELETE FROM Deck WHERE ID='{deck.ID}'", (SqliteConnection)connection);
         cmd.ExecuteNonQuery();
 
-        cmd = new SqliteCommand($"INSERT INTO Deck (ID, UserID, Name) VALUES ('null', '{deck.ID}', {deck.Name}",(SqliteConnection)connection);
+        cmd = new SqliteCommand($"INSERT INTO Deck (ID, UserID, Name) VALUES ('null', '{deck.ID}', '{deck.Name}')",(SqliteConnection)connection);
         cmd.ExecuteNonQuery();
 
-        foreach (Card card in deck.cards)
+        foreach (CardData card in deck.CardDatas)
         {
             CardManager.Instance.SaveCardToDb(deck.ID, card);
         }
