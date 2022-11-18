@@ -51,7 +51,7 @@ public class DeckManager : DatabaseHandler
                 iconValues[i] = int.Parse(iconSplit[i]);
             }
 
-            deck.cards.Add(new Card(title, description, type, (TagType)tag, tagText, iconValues, sprite) { iconValues = iconValues, SpritePath = sprite});
+            deck.CardDatas.Add(new CardData(title, description, type, (TagType)tag, tagText, iconValues, sprite));
 
         }
 
@@ -77,7 +77,7 @@ public class DeckManager : DatabaseHandler
 
         foreach (Card card in deck.cards)
         {
-            CardManager.Instance.SaveCardToDb(deck.ID, card);
+            CardManager.Instance.SaveCardToDb(deck.ID, card, (SqliteConnection)connection);
         }
 
         Close();

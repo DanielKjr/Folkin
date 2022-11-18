@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 public enum CardType { BASECARD, SKILLCARD }
 public enum TagType { SKILL, ITEM }
-public class Card : MonoBehaviour
+public class Card :MonoBehaviour
 {
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI descriptionText;
@@ -18,6 +18,18 @@ public class Card : MonoBehaviour
     public CardType CType { get; set; }
     public TagType TType { get; set; }
     public Card(string titleText, string description, string cardType, TagType tagType, string tagText, int[] icons, string sprite)
+    {
+        this.titleText.SetText(titleText);
+        descriptionText.SetText( description);
+        typeText.SetText( cardType);
+        this.tagText.SetText(tagText);
+        this.iconValues = icons;
+        
+        SpritePath = sprite;
+
+    }
+
+    public Card()
     {
 
     }

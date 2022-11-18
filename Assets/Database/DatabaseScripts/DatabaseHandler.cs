@@ -10,12 +10,42 @@ using UnityEngine.Rendering;
 
 public class DatabaseHandler
 {
-    protected SQLiteDatabaseProvider provider;
+    protected SQLiteDatabaseProvider provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; New=False");
     protected IDbConnection connection;
+    public IDbConnection Connection
+    {
+        get
+        {
+            if (connection == null)
+            {
+                connection = provider.CreateConnection();
+            }
+            return connection;
+        }
+    }
+
+    private static DatabaseHandler instance;
+    public static DatabaseHandler Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new DatabaseHandler();
+            }
+            return instance;
+
+        }
+    }
+
 
     public DatabaseHandler()
     {
-        provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; new=False");
+        //  provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; new=False");
+    }
+    public DatabaseHandler(string memoryString)
+    {
+        provider = new SQLiteDatabaseProvider(memoryString);
     }
 
     // Start is called before the first frame update
@@ -51,7 +81,7 @@ public class DatabaseHandler
         }
     }
 
-   
+
 
 
 
@@ -77,3 +107,4 @@ public class DatabaseHandler
 
     }
 }
+

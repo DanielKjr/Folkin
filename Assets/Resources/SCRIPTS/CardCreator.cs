@@ -37,7 +37,7 @@ public class CardCreator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && spacereleased)
         {
-            CreateCard("axe", "axe", CardType.BASECARD, "axe", "axe", Icons, "Sillhuettes/AxeSilhuette");
+         //   CreateCard("axe", "axe", CardType.BASECARD, "axe", "axe", Icons, "Sillhuettes/AxeSilhuette");
             //         string, string, enum, string, string, int[], string
         }
         if (Input.GetKeyUp(KeyCode.Space))
@@ -150,5 +150,5 @@ public class CardCreator : MonoBehaviour
         }
 
     }
-   
+
 }
