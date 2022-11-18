@@ -37,7 +37,7 @@ public class CardCreator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && spacereleased)
         {
-            CreateCard("axe", "axe", CardType.BASECARD, "axe", "axe", new int[3] {3, 4, 1} , "Sillhuettes/AxeSilhuette");
+            CreateCard("Axe", "Melee Weapon", CardType.BASECARD, "A sharp lump of metal attached to a wooden heft", "#Weapon | Medium \n Wooden | metallic", new int[3] {3, 4, 1} , "Sillhuettes/AxeSilhuette");
             //         string, string, enum, string, string, int[], string
         }
         if (Input.GetKeyUp(KeyCode.Space))
@@ -66,9 +66,6 @@ public class CardCreator : MonoBehaviour
         {
             List<int> icontags = new List<int>();
             List<GameObject> allIconTags = allIcons;
-            icontags.Add(3);
-            icontags.Add(4);
-            icontags.Add(1);
             GameObject[] _icons = new GameObject[icontags.Count];
             int iconIndex = 0;
             foreach (int var in icontags)
@@ -112,16 +109,19 @@ public class CardCreator : MonoBehaviour
             Texture2D cardSilhuetteTexture = (Texture2D)Resources.Load(silhuettepath);
             cardSilhuetteImage.sprite = Sprite.Create(cardSilhuetteTexture, new Rect(0, 0, cardSilhuetteTexture.width, cardSilhuetteTexture.height), new Vector2(0.5f, 0.5f));
             var cardSilhuetteCanvas = cardCanvas.GetComponentInChildren<Canvas>();
+            cardSilhuette.transform.localScale = new Vector2(cardSilhuetteTexture.width/80, cardSilhuetteTexture.height/80);
             cardSilhuette.transform.SetParent(cardCanvas.transform, false);
-            cardSilhuette.transform.localPosition = new Vector2(50, -60);
+            
+            RectTransform rt = cardPaper.rectTransform;
+            cardSilhuette.transform.localPosition = new Vector2(cardSilhuetteTexture.width, -cardSilhuetteTexture.height /2.5f);
             //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjælp af path'en dertil i string form. tager fat i cardsilhuette'ens
             //image og laver et sprite til den ud fra det den fandt i folderen. tager fat i canvas'et paa prefabben, og saetter den til at vaere parent
         }
         void CreateIcons()
         {
             var cardCanvas = card.GetComponentInChildren<Canvas>();
-            int iconOffsetX = 3;
-            int iconOffsetY = -125;
+            int iconOffsetX = -137;
+            int iconOffsetY = -225;
             int iconCount = 0;
 
             foreach (var icon in Icons)
@@ -130,21 +130,21 @@ public class CardCreator : MonoBehaviour
 
 
                 cardIcon.transform.SetParent(cardCanvas.transform, false);
-                cardIcon.transform.localScale = new Vector2(0.40f, 0.40f);
+                cardIcon.transform.localScale = new Vector2(0.8f, 0.8f);
                 cardIcon.transform.localPosition = new Vector2(iconOffsetX, iconOffsetY);
                 cardIcon.GetComponent<Image>().sprite = icon.GetComponent<Image>().sprite;
 
-                iconOffsetX -= 39;
+                iconOffsetX += 76;
                 iconCount++;
-                if (iconCount >= 3)
+                if (iconCount >= 2)
                 {
-                    iconOffsetX = -50;
-                    iconOffsetY = -50;
+                    iconOffsetX = -137;
+                    iconOffsetY = -149;
                     iconCount = 0;
                 }
-
+                Destroy(icon);
             }
-
+            
 
 
         }
