@@ -7,11 +7,17 @@ using System.IO;
 using System.Runtime.ExceptionServices;
 using UnityEngine;
 using UnityEngine.Rendering;
-
+public enum DatabaseType { Memory, dbFile}
 public class DatabaseHandler
 {
+  
     protected SQLiteDatabaseProvider provider;
     protected IDbConnection connection;
+    public CardManager CManager ;
+    public DeckManager DManager ;
+    public DatabaseType DBType;
+
+
 
     public IDbConnection Connection
     {
@@ -20,54 +26,48 @@ public class DatabaseHandler
             if (connection == null)
             {
                 connection = provider.CreateConnection();
-                          
+
             }
             return connection;
         }
-       
-    }
 
+    }
 
     public static bool IsUnitTesting { get; set; }
     public static bool DBIsMade { get; set; }
 
-    public DatabaseHandler()
-    {
-        if (!IsUnitTesting)
-        {
-            provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; New=False");
-        }
-        else
-        {
-            provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
-        }
-       
-        //if (!IsUnitTesting)
-        //{
-        //    provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; new=False");
-        //}
-        //else if (IsUnitTesting && !DBIsMade)
-        //{
-        //    provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
-        //    DBIsMade = true;
-        //}
-        //else
-        //{
-        //    provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3");
-        //}
-
-    }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void CreateReferences()
+    {
+        CManager = new CardManager();
+        DManager = new DeckManager();
+    }
+    public void ChangeDatabaseType(DatabaseType dbType)
+    {
+        switch (dbType)
+        {
+            case DatabaseType.Memory:
+                provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+                break;
+            case DatabaseType.dbFile:
+                provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; New=False");
+                break;
+            default:
+                break;
+        }
+     
     }
 
     /// <summary>
