@@ -9,20 +9,10 @@ using UnityEditor.U2D.Common;
 
 public class CardManager : DatabaseHandler
 {
-    private static CardManager instance;
+
     private Card currentCard;
 
-    public static CardManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new CardManager();
-            }
-            return instance;
-        }
-    }
+    
 
     //Search functions
 
@@ -37,8 +27,7 @@ public class CardManager : DatabaseHandler
         List<CardData> cards = new List<CardData>();
         //Open();
 
-        var cmd = new SqliteCommand($"SELECT Title, Type, Tag, TagText, Description, Icon, Sprite " +
-            $"FROM Card" +
+        var cmd = new SqliteCommand($"SELECT * FROM Card" +
             $" WHERE DeckID='{deckID}' " +
             $"AND Title='{cardName}'",
             (SqliteConnection)connection);
@@ -47,14 +36,17 @@ public class CardManager : DatabaseHandler
 
         while (dataRead.Read())
         {
+
             //retrieve all columns from database
-            string title = dataRead.GetString(0);
-            string type = dataRead.GetString(1);
-            int tag = dataRead.GetInt32(2);
-            string tagText = dataRead.GetString(3);
-            string description = dataRead.GetString(4);
-            string icon = dataRead.GetString(5);
-            string sprite = dataRead.GetString(6);
+            //var id = dataRead.GetInt32(0);
+            //var deckId = dataRead.GetInt32(1);
+            var title = dataRead.GetString(2);
+            var type = dataRead.GetString(3);
+            var tag = dataRead.GetInt32(4);
+            var tagText = dataRead.GetString(5);
+            var description = dataRead.GetString(6);
+            var icon = dataRead.GetString(7);
+            var sprite = dataRead.GetString(8);
 
             //divide into strings using commas
             string[] iconSplit = icon.Split(',');
@@ -64,7 +56,11 @@ public class CardManager : DatabaseHandler
             for (int i = 0; i < iconSplit.Length; i++)
             {
                 //Convert to integer
-                iconValues[i] = int.Parse(iconSplit[i]);
+                if (char.IsDigit(iconSplit[i][i]))
+                {
+                    iconValues[i] = int.Parse(iconSplit[i]);
+                }
+
             }
 
             cards.Add(new CardData(title, description, type, (TagType)tag, tagText, iconValues, sprite) { DeckID = deckID });
@@ -86,7 +82,6 @@ public class CardManager : DatabaseHandler
     public List<CardData> FindFromDb(string cardName, int deckID, DatabaseHandler handler)
     {
         List<CardData> cards = new List<CardData>();
-        //Open();
 
         var cmd = new SqliteCommand($"SELECT * FROM Card" +
             $" WHERE DeckID='{deckID}' " +
@@ -183,30 +178,29 @@ public class CardManager : DatabaseHandler
     //SaveFunction
 
     /// <summary>
+    /// May not work
     /// Saves card to the database with the matching deck
     /// </summary>
     /// <param name="deckId"></param>
     /// <param name="card"></param>
     public void SaveCardToDb(int deckId, CardData card)
     {
-        // Open();
 
         var cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
-            $"('null', " +
-            $" '{deckId}', " +
-            $" '{card.TitleText}', " +
-            $" '{card.TypeText}'," +
-            $" '{(int)card.TType}', " +
-            $" '{card.TagText}'," +
-            $" '{card.DescriptionText}'," +
-            $" '{card.IconValues}'," +
-            $" '{card.SpritePath}')",
-            (SqliteConnection)connection);
+             $"(null, " +
+             $" '{deckId}', " +
+             $" '{card.TitleText}', " +
+             $" '{card.TypeText}'," +
+             $" '{(int)card.TType}', " +
+             $" '{card.TagText}'," +
+             $" '{card.DescriptionText}'," +
+             $" '{card.IconValues}'," +
+             $" '{card.SpritePath}')",
+             (SqliteConnection)Connection);
 
-        //lav overload der giver connection med
+
         cmd.ExecuteNonQuery();
 
-        //   Close();
 
     }
 
@@ -219,12 +213,9 @@ public class CardManager : DatabaseHandler
     /// <param name="handler"></param>
     public void SaveCardToDb(int deckId, CardData card, DatabaseHandler handler)
     {
-        // Open();
-        string iconString = string.Empty;
-       // iconString = card.IconValues.ToString();
-      
-        
 
+        string iconString = string.Empty;
+        //TODO make icons to a string in db and split it up to an int in the code 
         var cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
             $"(null, " +
             $" '{deckId}', " +
@@ -240,7 +231,6 @@ public class CardManager : DatabaseHandler
        
         cmd.ExecuteNonQuery();
 
-        //   Close();
 
     }
 
@@ -249,6 +239,7 @@ public class CardManager : DatabaseHandler
     //Delete functions
 
     /// <summary>
+    /// NOT USABLE AT THE CURRENT TIME
     /// Deletes all cards in database with the given name. 
     /// </summary>
     /// <param name="name"></param>
@@ -265,14 +256,15 @@ public class CardManager : DatabaseHandler
     }
 
     /// <summary>
+    /// NOT USABLE AT THE CURRENT TIME
     /// Deletes all cards in database that matches the title of the card passed through the parameter.
     /// </summary>
     /// <param name="card"></param>
-    public void DeleteFromDatabase(Card card)
+    public void DeleteFromDatabase(Card card, DatabaseHandler handler)
     {
         Open();
 
-        var cmd = new SqliteCommand($"DELETE FROM Card WHERE Title='{card.titleText}'", (SqliteConnection)connection);
+        var cmd = new SqliteCommand($"DELETE FROM Card WHERE Title='{card.titleText}'", (SqliteConnection)handler.Connection);
         cmd.ExecuteNonQuery();
 
         Close();
