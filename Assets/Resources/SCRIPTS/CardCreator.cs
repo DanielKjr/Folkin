@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class CardCreator : MonoBehaviour
 {
-
+    [SerializeField]
+    public Player player;
     private CardCreator instance;
     public CardCreator Instance
     {
@@ -99,7 +100,7 @@ public class CardCreator : MonoBehaviour
 
         CreateSilhuette();
         CreateIcons();
-
+        player.AddToHand(card);
 
         void CreateSilhuette()
         {
