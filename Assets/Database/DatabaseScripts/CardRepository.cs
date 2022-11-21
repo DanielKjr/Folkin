@@ -1,0 +1,269 @@
+﻿using Mono.Data.Sqlite;
+using System.Collections.Generic;
+using System.Data;
+using UnityEditor.MemoryProfiler;
+
+public class CardRepository : ICardRepository
+{
+    private readonly IDatabaseProvider provider;
+    private readonly ICardMapper mapper;
+    private IDbConnection connection;
+
+    public CardRepository(IDatabaseProvider provider, ICardMapper mapper)
+    {
+        this.provider = provider;
+        this.mapper = mapper;
+    }
+
+
+    public void AddCard(int deckId, CardData card)
+    {
+        var cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
+           $"(null, " +
+           $" '{deckId}', " +
+           $" '{card.TitleText}', " +
+           $" '{card.TypeText}'," +
+           $" '{(int)card.TType}', " +
+           $" '{card.TagText}'," +
+           $" '{card.DescriptionText}'," +
+           $" '{card.IconValues}'," +
+           $" '{card.SpritePath}')",
+           (SqliteConnection)connection);
+
+
+        cmd.ExecuteNonQuery();
+    }
+
+    public void AddDeck(int userId, Deck deck)
+    {
+        var cmd = new SqliteCommand($"DELETE FROM Card WHERE DeckID='{deck.ID}'", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+        cmd = new SqliteCommand($"DELETE FROM Deck WHERE ID='{deck.ID}'", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+        cmd = new SqliteCommand($"INSERT INTO Deck (ID, UserID, Name) VALUES (null, '{userId}', '{deck.Name}')", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+        foreach (CardData card in deck.CardDatas)
+        {
+            AddCard(userId, card);
+        }
+    }
+
+
+    public void DeleteCard(string name)
+    {
+
+    }
+
+    public void DeleteCard(CardData card)
+    {
+
+    }
+
+    public void EditCard(int deckId, string cardName, CardData card)
+    {
+        var cmd = new SqliteCommand($"DELETE FROM Card WHERE DeckID={deckId} AND Name={cardName}", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+        cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
+          $"(null, " +
+          $" '{deckId}', " +
+          $" '{card.TitleText}', " +
+          $" '{card.TypeText}'," +
+          $" '{(int)card.TType}', " +
+          $" '{card.TagText}'," +
+          $" '{card.DescriptionText}'," +
+          $" '{card.IconValues}'," +
+          $" '{card.SpritePath}')",
+          (SqliteConnection)connection);
+
+        cmd.ExecuteNonQuery();
+    }
+
+    public CardData FindCard(string name)
+    {
+        var cmd = new SqliteCommand($"SELECT * FROM Card WHERE Title='{name}'",
+            (SqliteConnection)connection);
+
+        var dataRead = cmd.ExecuteReader();
+
+        var result = mapper.MapCardsFromReader(dataRead);
+
+
+
+
+        return result[0];
+    }
+
+    public CardData FindCard(CardData card)
+    {
+        List<CardData> cards = new List<CardData>();
+
+        var cmd = new SqliteCommand($"SELECT * FROM Card WHERE Title='{card.TitleText}'",
+            (SqliteConnection)connection);
+
+        var dataRead = cmd.ExecuteReader();
+
+        var result = mapper.MapCardsFromReader(dataRead);
+
+        return result[0];
+    }
+
+    public List<CardData> GetAllCards()
+    {
+
+
+        var cmd = new SqliteCommand($"SELECT * FROM Card", (SqliteConnection)connection);
+        var reader = cmd.ExecuteReader();
+
+        var result = mapper.MapCardsFromReader(reader);
+
+        return result;
+    }
+
+    public List<CardData> GetAllCards(int deckId)
+    {
+        var cmd = new SqliteCommand($"SELECT * FROM Card WHERE DeckID='{deckId}'", (SqliteConnection)connection);
+        var reader = cmd.ExecuteReader();
+
+        var result = mapper.MapCardsFromReader(reader);
+
+        return result;
+    }
+
+  
+    private void CreateDBTables()
+    {
+        var cmd = new SqliteCommand($"CREATE TABLE IF NOT EXISTS User (ID INTEGER PRIMARY KEY, Type STRING)", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+        cmd = new SqliteCommand($"CREATE TABLE IF NOT EXISTS Deck ( ID INTEGER PRIMARY KEY, UserID INTEGER,Name STRING, FOREIGN KEY(UserID) REFERENCES User(ID))", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+
+        cmd = new SqliteCommand($"CREATE TABLE IF NOT EXISTS Card" +
+           $" (ID INTEGER PRIMARY KEY, DeckID INTEGER, Title STRING, " +
+           $"Type STRING, Tag INTEGER, TagText STRING, Description STRING, Icon " +
+           $"STRING, Sprite STRING, FOREIGN KEY(DeckID) REFERENCES Deck(ID))", (SqliteConnection)connection);
+        cmd.ExecuteNonQuery();
+
+    }
+
+    public Deck FindDeck(string name)
+    {
+        Deck deck = new Deck();
+        var cmd = new SqliteCommand($"SELECT * FROM Card WHERE Name={name}", (SqliteConnection)connection);
+        var dataRead = cmd.ExecuteReader();
+
+        deck.CardDatas = mapper.MapCardsFromReader(dataRead);
+
+        cmd = new SqliteCommand($"SELECT Name, UserID FROM Deck WHERE Name='{name}'", (SqliteConnection)connection);
+        dataRead = cmd.ExecuteReader();
+        while (dataRead.Read())
+        {
+            deck.Name = dataRead.GetString(0);
+            deck.ID = dataRead.GetInt32(1);
+        }
+
+        return deck;
+
+    }
+
+    public Deck FindDeck(Deck deck)
+    {
+        
+        var cmd = new SqliteCommand($"SELECT * FROM Card WHERE DeckID='{deck.ID}'", (SqliteConnection)connection);
+        var dataRead = cmd.ExecuteReader();
+
+        deck.CardDatas = mapper.MapCardsFromReader(dataRead);
+
+        cmd = new SqliteCommand($"SELECT Name FROM Deck WHERE Name='{deck.Name}'", (SqliteConnection)connection);
+        dataRead = cmd.ExecuteReader();
+        while (dataRead.Read())
+        {
+            deck.Name = dataRead.GetString(0);
+        }
+
+        return deck;
+    }
+
+ 
+    public void Open()
+    {
+        if (connection == null)
+        {
+            connection = provider.CreateConnection();
+        }
+        connection.Open();
+        CreateDBTables();
+    }
+    public void Close()
+    {
+        connection.Close();
+    }
+}
+public interface ICardRepository
+{
+    void AddCard(int deckId, CardData card);
+    void AddDeck(int userId, Deck deck);
+    void EditCard(int deckId, string cardName, CardData card);
+    void DeleteCard(string name);
+    void DeleteCard(CardData card);
+
+    CardData FindCard(string name);
+    CardData FindCard(CardData card);
+    Deck FindDeck(string name);
+    Deck FindDeck(Deck deck);
+    List<CardData> GetAllCards();
+    List<CardData> GetAllCards(int deckId);
+    void Open();
+    void Close();
+
+}
+
+public interface ICardMapper
+{
+    List<CardData> MapCardsFromReader(SqliteDataReader reader);
+}
+
+public class CardMapper : ICardMapper
+{
+    public List<CardData> MapCardsFromReader(SqliteDataReader reader)
+    {
+        var result = new List<CardData>();
+
+        while (reader.Read())
+        {
+            var deckId = reader.GetInt32(1);
+            var title = reader.GetString(2);
+            var type = reader.GetString(3);
+            var tag = reader.GetInt32(4);
+            var tagText = reader.GetString(5);
+            var description = reader.GetString(6);
+            var icon = reader.GetString(7);
+            var sprite = reader.GetString(8);
+
+            //divide into strings using commas
+            string[] iconSplit = icon.Split(',');
+            int[] iconValues = new int[iconSplit.Length];
+
+
+            for (int i = 0; i < iconSplit.Length; i++)
+            {
+                //Convert to integer
+                if (char.IsDigit(iconSplit[i][i]))
+                {
+                    iconValues[i] = int.Parse(iconSplit[i]);
+                }
+
+            }
+
+            result.Add(new CardData(title, description, type, (TagType)tag, tagText, iconValues, sprite) { DeckID = deckId });
+        }
+
+        return result;
+    }
+}
+
