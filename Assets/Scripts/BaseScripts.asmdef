@@ -5,7 +5,8 @@
         "GUID:f00adf9ba4c7f95409a4582c86d2c63f"
     ],
     "includePlatforms": [
-        "Editor"
+        "Editor",
+        "WebGL"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
