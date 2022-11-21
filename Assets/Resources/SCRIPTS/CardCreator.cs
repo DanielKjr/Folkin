@@ -64,11 +64,11 @@ public class CardCreator : MonoBehaviour
     {
         get
         {
-            List<int> icontags = new List<int>();
+            
             List<GameObject> allIconTags = allIcons;
-            GameObject[] _icons = new GameObject[icontags.Count];
+            GameObject[] _icons = new GameObject[iconTags.Length];
             int iconIndex = 0;
-            foreach (int var in icontags)
+            foreach (int var in iconTags)
             {
                 GameObject gameObject = new GameObject();
                 gameObject = allIconTags[var];
