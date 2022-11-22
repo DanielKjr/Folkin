@@ -7,27 +7,9 @@ using UnityEngine.TestTools;
 
 public class DbUnitTest
 {
-    private DatabaseHandler handler;
 
 
-    private void CreateDBTable()
-    {
 
-        var cmd = new SqliteCommand($"CREATE TABLE IF NOT EXISTS User (ID INTEGER PRIMARY KEY, Type STRING)", (SqliteConnection)handler.Connection);
-        cmd.ExecuteNonQuery();
-
-        cmd = new SqliteCommand($"CREATE TABLE IF NOT EXISTS Deck ( ID INTEGER PRIMARY KEY, UserID INTEGER,Name STRING, FOREIGN KEY(UserID) REFERENCES User(ID))", (SqliteConnection)handler.Connection);
-        cmd.ExecuteNonQuery();
-
-
-        cmd = new SqliteCommand($"CREATE TABLE IF NOT EXISTS Card" +
-           $" (ID INTEGER PRIMARY KEY, DeckID INTEGER, Title STRING, " +
-           $"Type STRING, Tag INTEGER, TagText STRING, Description STRING, Icon " +
-           $"STRING, Sprite STRING, FOREIGN KEY(DeckID) REFERENCES Deck(ID))", (SqliteConnection)handler.Connection);
-        cmd.ExecuteNonQuery();
-
-
-    }
 
 
     //originalt brugt til at teste at den kunne læse fra db
