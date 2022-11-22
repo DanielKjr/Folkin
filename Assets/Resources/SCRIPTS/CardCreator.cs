@@ -34,6 +34,7 @@ public class CardCreator : MonoBehaviour
     }
 
     // Update is called once per frame
+  
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && spacereleased)
@@ -82,7 +83,7 @@ public class CardCreator : MonoBehaviour
 
     void CreateCard(string title, string type, CardType ttype, string description, string tags, int[] iconValues, string silhuettepath)
     {
-        //omskriv ikoner til at den først finder dem frem hernede udfra et array af ints den får, når man kalder metoden
+        //omskriv ikoner til at den fÅ™rst finder dem frem hernede udfra et array af ints den fÄºr, nÄºr man kalder metoden
         var card = Instantiate(cardPrefab, new Vector2(5, 5), Quaternion.identity).GetComponent<Card>();
         card.SetCard(title, type, ttype, description, tags, iconValues, silhuettepath);
         var cardCanvas = card.GetComponentInChildren<Canvas>();
@@ -105,14 +106,15 @@ public class CardCreator : MonoBehaviour
 
         CreateSilhuette();
         CreateIcons();
+        PlayerHand
         player.AddToHand(card);
-        
 
         void CreateSilhuette()
         {
 
             var cardSilhuette = Instantiate(CardSilhuettePrefab, Vector2.zero, Quaternion.identity);
             var cardSilhuetteImage = cardSilhuette.GetComponent<Image>();
+            
             Texture2D cardSilhuetteTexture = (Texture2D)Resources.Load(silhuettepath);
             cardSilhuetteImage.sprite = Sprite.Create(cardSilhuetteTexture, new Rect(0, 0, cardSilhuetteTexture.width, cardSilhuetteTexture.height), new Vector2(0.5f, 0.5f));
             var cardSilhuetteCanvas = cardCanvas.GetComponentInChildren<Canvas>();
@@ -121,7 +123,7 @@ public class CardCreator : MonoBehaviour
             
             RectTransform rt = cardPaper.rectTransform;
             cardSilhuette.transform.localPosition = new Vector2(cardSilhuetteTexture.width, -cardSilhuetteTexture.height /2.5f);
-            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjælp af path'en dertil i string form. tager fat i cardsilhuette'ens
+            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjÄ‡lp af path'en dertil i string form. tager fat i cardsilhuette'ens
             //image og laver et sprite til den ud fra det den fandt i folderen. tager fat i canvas'et paa prefabben, og saetter den til at vaere parent
         }
         void CreateIcons()

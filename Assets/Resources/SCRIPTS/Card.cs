@@ -18,7 +18,7 @@ public class Card : MonoBehaviour
     public TagType TType { get; set; }
     public Card(string titleText, string description, string cardType, TagType tagType, string tagText, int[] icons, string sprite)
     {
-
+        
     }
 
     public void SetCard(string TitleText, string TypeText, CardType cardType, string DescriptionText, string TagText, int[] iconValues, string silhuettePath)
