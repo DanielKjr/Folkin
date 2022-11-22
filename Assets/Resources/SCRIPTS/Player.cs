@@ -11,13 +11,19 @@ public class Player : MonoBehaviour
     public void AddToHand(Card card)
     {
         hand.Add(card);
-        card.transform.position = new Vector2(0,0);
-        var cardCanvas = card.GetComponentInChildren<Canvas>();
-        Image cardPaper = cardCanvas.GetComponentInChildren<Image>();
-        cardPaper.transform.position = new Vector2(172, 0);
     }
     public void RemoveFromHand(Card card)
     {
         hand.Remove(card);
+    }
+    public void CardScale(Card card, float newScale)
+    {
+        var cardCanvas = card.GetComponentInChildren<Canvas>();
+        cardCanvas.transform.localScale = new Vector3(newScale,newScale,newScale);
+    }
+    public void CardMove(Card card, Vector2 newPosition)
+    {
+        var cardCanvas = card.GetComponentInChildren<Canvas>();
+        cardCanvas.transform.position = newPosition;
     }
 }

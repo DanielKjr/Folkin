@@ -86,6 +86,11 @@ public class CardCreator : MonoBehaviour
         var card = Instantiate(cardPrefab, new Vector2(5, 5), Quaternion.identity).GetComponent<Card>();
         card.SetCard(title, type, ttype, description, tags, iconValues, silhuettepath);
         var cardCanvas = card.GetComponentInChildren<Canvas>();
+
+        CanvasSetup();
+        
+
+
         iconTags = iconValues;
         Image cardPaper = cardCanvas.GetComponentInChildren<Image>();
         switch (ttype)
@@ -101,6 +106,7 @@ public class CardCreator : MonoBehaviour
         CreateSilhuette();
         CreateIcons();
         player.AddToHand(card);
+        
 
         void CreateSilhuette()
         {
@@ -148,6 +154,14 @@ public class CardCreator : MonoBehaviour
             
 
 
+        }
+        void CanvasSetup()
+        {
+            cardCanvas.renderMode = RenderMode.WorldSpace;
+            cardCanvas.transform.position = new Vector2(0, 0);
+
+            float s = 0.02f;
+            cardCanvas.transform.localScale = new Vector3(s, s, s); //Why must i do this? Why not scale=0.02f ??
         }
 
     }
