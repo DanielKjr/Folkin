@@ -38,8 +38,6 @@ public class CardRepository : ICardRepository
 
     public void AddCard(int deckId, CardData card)
     {
-
-
         var cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
            $"(null, " +
            $" '{deckId}'," +
@@ -51,7 +49,6 @@ public class CardRepository : ICardRepository
            $" '{IconArrayToString(card)}'," +
            $" '{card.SpritePath}')",
            (SqliteConnection)connection);
-
 
         cmd.ExecuteNonQuery();
     }
@@ -124,14 +121,11 @@ public class CardRepository : ICardRepository
     public CardData FindCard(CardData card)
     {
 
-
         var cmd = new SqliteCommand($"SELECT * FROM Card WHERE Title='{card.TitleText}'",
             (SqliteConnection)connection);
 
         var dataRead = cmd.ExecuteReader();
-
         var result = mapper.MapCardsFromReader(dataRead).FirstOrDefault();
-
 
         return result;
 

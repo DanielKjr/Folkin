@@ -12,10 +12,9 @@ public class DbUnitTest
 
 
 
-    //originalt brugt til at teste at den kunne læse fra db
-    //men bruges til at teste den faktiske database fil 
+   
     [Test]
-    public void CanHandleStringToInt()
+    public void CanAddAndReadFromDbFile()
     {
 
         ICardRepository repository;
@@ -26,8 +25,8 @@ public class DbUnitTest
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
-        //CardData card = new CardData("Axe", "Chop chop", "Skill", TagType.SKILL, "Axe", new int[2] { 1, 2 }, "Axe");
-        //  repository.AddCard(1, card);
+        CardData card = new CardData("Axe", "Chop chop", "Skill", TagType.SKILL, "Axe", new int[2] { 1, 2 }, "Axe");
+        repository.AddCard(2, card);
         var result = repository.GetAllCards();
 
         Assert.IsNotNull(result);
@@ -327,7 +326,7 @@ public class DbUnitTest
         CardData card = new CardData("Axe", "Chopchop", "Skill", TagType.SKILL, "You can swing your axe", new int[2] { 3, 2 }, "Axe");
         repository.AddCard(1, card);
 
-        CardData newcard = new CardData("Sword", "Schwing", "Skill", TagType.SKILL, "Pokey pokey", new int[2] { 1,2 }, "Sword");
+        CardData newcard = new CardData("Sword", "Schwing", "Skill", TagType.SKILL, "Pokey pokey", new int[2] { 1, 2 }, "Sword");
         repository.EditCard(1, "Axe", newcard);
 
         var result = repository.FindCard(newcard);

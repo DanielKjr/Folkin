@@ -25,13 +25,7 @@ public class CardMapper : ICardMapper
 
             for (int i = 0; i < iconSplit.Length; i++)
             {
-                //Convert to integer
                 iconValues[i] = int.Parse(iconSplit[i]);
-                //if (char.IsDigit(iconSplit[i][i]))
-                //{
-                //    iconValues[i] = int.Parse(iconSplit[i]);
-                //}
-
             }
 
             result.Add(new CardData(title, description, type, (TagType)tag, tagText, iconValues, sprite) { DeckID = deckId });
