@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class CardCreator : MonoBehaviour
 {
-
+    [SerializeField]
+    public Player player;
     private CardCreator instance;
     public CardCreator Instance
     {
@@ -82,10 +83,15 @@ public class CardCreator : MonoBehaviour
 
     void CreateCard(string title, string type, CardType ttype, string description, string tags, int[] iconValues, string silhuettepath)
     {
-        //omskriv ikoner til at den først finder dem frem hernede udfra et array af ints den får, når man kalder metoden
+        //omskriv ikoner til at den fÅ™rst finder dem frem hernede udfra et array af ints den fÄºr, nÄºr man kalder metoden
         var card = Instantiate(cardPrefab, new Vector2(5, 5), Quaternion.identity).GetComponent<Card>();
         card.SetCard(title, type, ttype, description, tags, iconValues, silhuettepath);
         var cardCanvas = card.GetComponentInChildren<Canvas>();
+
+        CanvasSetup();
+        
+
+
         iconTags = iconValues;
         Image cardPaper = cardCanvas.GetComponentInChildren<Image>();
         switch (ttype)
@@ -100,6 +106,8 @@ public class CardCreator : MonoBehaviour
 
         CreateSilhuette();
         CreateIcons();
+        PlayerHand
+        player.AddToHand(card);
 
         void CreateSilhuette()
         {
@@ -115,7 +123,7 @@ public class CardCreator : MonoBehaviour
             
             RectTransform rt = cardPaper.rectTransform;
             cardSilhuette.transform.localPosition = new Vector2(cardSilhuetteTexture.width, -cardSilhuetteTexture.height /2.5f);
-            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjælp af path'en dertil i string form. tager fat i cardsilhuette'ens
+            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjÄ‡lp af path'en dertil i string form. tager fat i cardsilhuette'ens
             //image og laver et sprite til den ud fra det den fandt i folderen. tager fat i canvas'et paa prefabben, og saetter den til at vaere parent
         }
         void CreateIcons()
@@ -148,6 +156,14 @@ public class CardCreator : MonoBehaviour
             
 
 
+        }
+        void CanvasSetup()
+        {
+            cardCanvas.renderMode = RenderMode.WorldSpace;
+            cardCanvas.transform.position = new Vector2(0, 0);
+
+            float s = 0.02f;
+            cardCanvas.transform.localScale = new Vector3(s, s, s); //Why must i do this? Why not scale=0.02f ??
         }
 
     }
