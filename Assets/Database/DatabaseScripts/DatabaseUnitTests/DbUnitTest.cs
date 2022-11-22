@@ -30,8 +30,88 @@ public class DbUnitTest
     }
 
 
+    //originalt brugt til at teste at den kunne læse fra db
+    //men bruges til at teste den faktiske database fil 
     [Test]
-    public void CardCanBeFound()
+    public void CanHandleStringToInt()
+    {
+
+        ICardRepository repository;
+
+        //Arrange
+        var mapper = new CardMapper();
+        var provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; New=false");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
+
+        //CardData card = new CardData("Axe", "Chop chop", "Skill", TagType.SKILL, "Axe", new int[2] { 1, 2 }, "Axe");
+        //  repository.AddCard(1, card);
+        var result = repository.GetAllCards();
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result[0].IconValues[0]);
+        Assert.AreEqual(1, result[1].IconValues[0]);
+        repository.Close();
+    }
+
+    [Test]
+    public void CanAddCard()
+    {
+        ICardRepository repository;
+
+        //Arrange
+        var mapper = new CardMapper();
+        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
+
+        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, "TagText", new int[2] { 3, 5 }, "Axe");
+        repository.AddCard(1, card);
+
+        var result = repository.FindCard(card);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(TagType.ITEM, result.TType);
+
+        repository.Close();
+    }
+
+    [Test]
+    public void CanAddDeck()
+    {
+        ICardRepository repository;
+
+        //Arrange
+        var mapper = new CardMapper();
+        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
+
+        Deck deck = new Deck();
+        deck.Name = "Dummy Deck";
+        deck.ID = 2;
+        CardData[] cards = new CardData[3];
+        cards[0] = new CardData("Axe", "Damage", "Action", TagType.ITEM, "ChopChop", new int[2] { 3, 5 }, "Axe");
+        cards[1] = new CardData("Sword", "Damage", "CardType", TagType.ITEM, "Poke", new int[2] { 3, 5 }, "Sword");
+        cards[2] = new CardData("Potion", "Heal", "CardType", TagType.ITEM, "Chug", new int[2] { 3, 5 }, "Potion");
+
+        for (int i = 0; i < cards.Length; i++)
+        {
+            deck.CardDatas.Add(cards[i]);
+        }
+
+        repository.AddDeck(deck.ID, deck);
+
+        var result = repository.FindDeck(deck);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.ID);
+        Assert.AreEqual(3, result.CardDatas.Count);
+
+        repository.Close();
+    }
+
+    [Test]
+    public void CanFindCardByReference()
     {
         ICardRepository repository;
 
@@ -54,8 +134,34 @@ public class DbUnitTest
         Assert.AreEqual(TagType.ITEM, result.TType);
         repository.Close();
     }
+
     [Test]
-    public void AllCardsCanBeFound()
+    public void CanFindCardByName()
+    {
+        ICardRepository repository;
+
+        //Arrange
+        var mapper = new CardMapper();
+        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
+
+        //Act
+        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, "TagText", new int[2] { 3, 5 }, "Axe");
+        repository.AddCard(1, card);
+
+        var result = repository.FindCard("TitleText");
+
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("TitleText", result.TitleText);
+        Assert.AreEqual(TagType.ITEM, result.TType);
+        repository.Close();
+    }
+
+    [Test]
+    public void CanGetAllCards()
     {
         ICardRepository repository;
 
@@ -86,8 +192,39 @@ public class DbUnitTest
 
     }
 
+
     [Test]
-    public void CanFindDeck()
+    public void CanGetAllCardsByDeckID()
+    {
+        ICardRepository repository;
+
+        var mapper = new CardMapper();
+        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
+
+        CardData[] cards = new CardData[3];
+        cards[0] = new CardData("Axe", "Damage", "Action", TagType.ITEM, "ChopChop", new int[2] { 3, 5 }, "Axe");
+        cards[1] = new CardData("Sword", "Damage", "CardType", TagType.ITEM, "Poke", new int[2] { 3, 5 }, "Sword");
+        cards[2] = new CardData("Potion", "Heal", "CardType", TagType.ITEM, "Chug", new int[2] { 3, 5 }, "Potion");
+
+        for (int i = 0; i < cards.Length; i++)
+        {
+            repository.AddCard(1, cards[i]);
+        }
+
+        var result = repository.GetAllCards(1);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Axe", result[0].SpritePath);
+        Assert.AreEqual("Sword", result[1].SpritePath);
+        Assert.AreEqual("Potion", result[2].SpritePath);
+
+        repository.Close();
+    }
+
+    [Test]
+    public void CanFindDeckByReference()
     {
         ICardRepository repository;
 
@@ -106,10 +243,10 @@ public class DbUnitTest
         for (int i = 0; i < cards.Length; i++)
         {
             deck.CardDatas.Add(cards[i]);
-  
+
         }
 
-        repository.AddDeck(2, deck);
+        repository.AddDeck(deck.ID, deck);
 
         var result = repository.FindDeck(deck);
         Assert.IsNotNull(result);
@@ -118,138 +255,107 @@ public class DbUnitTest
         repository.Close();
     }
 
-    //[Test]
-    //public void CanAddCardToDatabase()
-    //{
-    //    //Arrange
-    //    handler = new DatabaseHandler();
-    //    handler.CreateReferences();
-    //    handler.ChangeDatabaseType(DatabaseType.Memory);
 
-    //    handler.Open();
-    //    CreateDBTable();
+    [Test]
+    public void CanFindDeckByName()
+    {
+        ICardRepository repository;
 
-    //    //Act
-    //    CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, "TagText", new int[2] { 3, 5 }, "Axe");
-    //    handler.CManager.SaveCardToDb(1, card, handler);
+        var mapper = new CardMapper();
+        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
+        Deck deck = new Deck();
+        deck.ID = 1;
+        deck.Name = "TestDeck";
+        CardData[] cards = new CardData[3];
+        cards[0] = new CardData("Axe", "Damage", "Action", TagType.ITEM, "ChopChop", new int[2] { 3, 5 }, "Axe");
+        cards[1] = new CardData("Sword", "Damage", "CardType", TagType.ITEM, "Poke", new int[2] { 3, 5 }, "Sword");
+        cards[2] = new CardData("Potion", "Heal", "CardType", TagType.ITEM, "Chug", new int[2] { 3, 5 }, "Potion");
 
-    //    CardData cardFromDB = handler.CManager.FindFromDb("TitleText", 1, handler)[0];
-    //    handler.Close();
+        for (int i = 0; i < cards.Length; i++)
+        {
+            deck.CardDatas.Add(cards[i]);
 
-    //    //Assert
-    //    Assert.IsNotNull(cardFromDB);
-    //    Assert.AreEqual("TitleText", cardFromDB.TitleText);
-    //    Assert.AreEqual(1, cardFromDB.DeckID);
+        }
 
+        repository.AddDeck(deck.ID, deck);
 
+        var result = repository.FindDeck(deck.Name);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(3, result.CardDatas.Count);
 
-
-    //}
-
-    //[Test]
-    //public void CanLoadDeck()
-    //{
-    //    Arrange
-    //    handler = new DatabaseHandler();
-    //    handler.CreateReferences();
-    //    handler.ChangeDatabaseType(DatabaseType.Memory);
-
-    //    handler.Open();
-    //    CreateDBTable();
-
-    //    Act
-    //    CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, "TagText", new int[2] { 3, 5 }, "Axe");
-
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        handler.CManager.SaveCardToDb(1, card, handler);
-    //    }
-
-    //    Deck deck = handler.DManager.LoadDeck(1, handler);
-    //    handler.Close();
-    //    Assert
-    //    Assert.IsNotNull(deck);
-    //    Assert.AreEqual(10, deck.CardDatas.Count);
-    //    Assert.AreEqual(TagType.ITEM, deck.CardDatas[5].TType);
+        repository.Close();
+    }
 
 
+    [Test]
+    public void CanDeleteCardByReference()
+    {
+        ICardRepository repository;
 
-    //}
+        var mapper = new CardMapper();
+        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
 
-    //[Test]
-    //public void CanSaveDeckToDB()
-    //{
-    //    handler = new DatabaseHandler();
-    //    handler.CreateReferences();
-    //    handler.ChangeDatabaseType(DatabaseType.Memory);
+        CardData card = new CardData("Axe", "Chopchop", "Skill", TagType.SKILL, "You can swing your axe", new int[2] { 3, 2 }, "Axe");
+        repository.AddCard(1, card);
 
-    //    handler.Open();
-    //    CreateDBTable();
-    //    Deck deck = new Deck();
-    //    CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, "TagText", new int[2] { 3, 5 }, "Axe");
+        repository.DeleteCard(card);
+        var result = repository.FindCard(card);
 
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        handler.CManager.SaveCardToDb(2, card, handler);
-    //        deck.CardDatas.Add(card);
-    //    }
-    //    deck.ID = 2;
-    //    deck.Name = "TestDeck";
-    //    handler.DManager.SaveDeckToDb(deck, handler);
+        Assert.IsNull(result);
+        Assert.IsNotNull(card);
+        repository.Close();
+    }
 
-    //    Deck newDeck = handler.DManager.LoadDeck(2, handler);
+    [Test]
+    public void CanDeleteCardByName()
+    {
+        ICardRepository repository;
+
+        var mapper = new CardMapper();
+        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
+
+        CardData card = new CardData("Axe", "Chopchop", "Skill", TagType.SKILL, "You can swing your axe", new int[2] { 3, 2 }, "Axe");
+        repository.AddCard(1, card);
+
+        repository.DeleteCard("Axe");
+        var result = repository.FindCard(card);
+
+        Assert.IsNull(result);
+        Assert.IsNotNull(card);
+        repository.Close();
+    }
 
 
+    [Test]
+    public void CanEditCard()
+    {
+        ICardRepository repository;
 
+        var mapper = new CardMapper();
+        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
 
-    //    Assert.IsNotNull(newDeck);
-    //    Assert.AreEqual(10, deck.CardDatas.Count);
-    //    Assert.AreEqual("TestDeck", newDeck.Name);
-    //    Assert.AreEqual(TagType.ITEM, deck.CardDatas[5].TType);
+        CardData card = new CardData("Axe", "Chopchop", "Skill", TagType.SKILL, "You can swing your axe", new int[2] { 3, 2 }, "Axe");
+        repository.AddCard(1, card);
 
-    //    handler.Close();
-    //}
+        CardData newcard = new CardData("Sword", "Schwing", "Skill", TagType.SKILL, "Pokey pokey", new int[2] { 1,2 }, "Sword");
+        repository.EditCard(1, "Axe", newcard);
 
-    //[Test]
-    //public void CanDeleteDeck()
-    //{
-    //    handler = new DatabaseHandler();
-    //    handler.CreateReferences();
-    //    handler.ChangeDatabaseType(DatabaseType.Memory);
+        var result = repository.FindCard(newcard);
+        var oldResult = repository.FindCard(card);
 
-    //    handler.Open();
-    //    CreateDBTable();
+        Assert.IsNotNull(result);
+        Assert.IsNull(oldResult);
+        Assert.AreEqual("Sword", result.TitleText);
 
-    //    Create deck
-    //    Deck deck = new Deck();
-    //    CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, "TagText", new int[2] { 3, 5 }, "Axe");
-
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        handler.CManager.SaveCardToDb(2, card, handler);
-    //        deck.CardDatas.Add(card);
-    //    }
-    //    deck.ID = 2;
-    //    deck.Name = "TestDeck";
-
-    //    Save deck
-    //    handler.DManager.SaveDeckToDb(deck, handler);
-
-    //    Make sure it exists
-    //    Deck tempDeck = handler.DManager.LoadDeck(2, handler);
-
-    //    Delete deck
-    //    handler.DManager.DeleteDeck(2, "'TestDeck'", handler);
-
-    //    Try to load again
-    //    Deck newDeck = handler.DManager.LoadDeck(2, handler);
-
-    //    Assert that the deck existed in the first place, and that it is now deleted
-    //    Assert.IsNotNull(tempDeck);
-    //    Assert.AreEqual(10, tempDeck.CardDatas.Count);
-    //    Assert.IsEmpty(newDeck.CardDatas);
-
-    //    handler.Close();
-    //}
+        repository.Close();
+    }
 
 }

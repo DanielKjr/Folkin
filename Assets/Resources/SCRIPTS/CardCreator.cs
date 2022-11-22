@@ -33,6 +33,7 @@ public class CardCreator : MonoBehaviour
     }
 
     // Update is called once per frame
+  
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && spacereleased)
@@ -100,12 +101,12 @@ public class CardCreator : MonoBehaviour
         CreateSilhuette();
         CreateIcons();
 
-
         void CreateSilhuette()
         {
 
             var cardSilhuette = Instantiate(CardSilhuettePrefab, Vector2.zero, Quaternion.identity);
             var cardSilhuetteImage = cardSilhuette.GetComponent<Image>();
+            
             Texture2D cardSilhuetteTexture = (Texture2D)Resources.Load(silhuettepath);
             cardSilhuetteImage.sprite = Sprite.Create(cardSilhuetteTexture, new Rect(0, 0, cardSilhuetteTexture.width, cardSilhuetteTexture.height), new Vector2(0.5f, 0.5f));
             var cardSilhuetteCanvas = cardCanvas.GetComponentInChildren<Canvas>();
