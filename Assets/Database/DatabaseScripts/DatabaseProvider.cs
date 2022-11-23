@@ -1,11 +1,11 @@
 ﻿using Mono.Data.Sqlite;
 using System.Data;
 
-public class SQLiteDatabaseProvider : IDatabaseProvider
+public class DatabaseProvider : IDatabaseProvider
 {
     private readonly string connectionString;
 
-    public SQLiteDatabaseProvider(string connectionString)
+    public DatabaseProvider(string connectionString)
     {
         this.connectionString = connectionString;
     }
