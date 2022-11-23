@@ -17,10 +17,21 @@ public class Player : MonoBehaviour
     {
         hand.Remove(card);
     }
-    public void CardScale(Card card, float newScale)
+    public void CardScale(Card card, float newScale, bool ScaleAllCards)
     {
-        var cardCanvas = card.GetComponentInChildren<Canvas>();
-        cardCanvas.transform.localScale = new Vector3(newScale,newScale,newScale);
+        if (!ScaleAllCards)
+        {
+            var cardCanvas = card.GetComponentInChildren<Canvas>();
+            cardCanvas.transform.localScale = new Vector3(newScale, newScale, newScale);
+        }
+        else
+        {
+            foreach(var item in hand)
+            {
+                var cardCanvas = item.GetComponentInChildren<Canvas>();
+                cardCanvas.transform.localScale = new Vector3(newScale, newScale, newScale);
+            }
+        }
     }
     public void CardMove(Card card, Vector2 newPosition)
     {
