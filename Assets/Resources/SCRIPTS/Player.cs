@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public void AddToHand(Card card)
     {
         hand.Add(card);
+        AutoShiftCards();
     }
     public void RemoveFromHand(Card card)
     {
@@ -25,5 +26,17 @@ public class Player : MonoBehaviour
     {
         var cardCanvas = card.GetComponentInChildren<Canvas>();
         cardCanvas.transform.position = newPosition;
+    }
+    private void AutoShiftCards()
+    {
+        int count = hand.Count;
+        int offset = 2; //Offset between each card. Higher number = more space.
+        if (count > 1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                CardMove(hand[i], new Vector2((i * offset) - count, 0));
+            }
+        }
     }
 }

@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1982482681}
   allIcons: []
-  cardPrefab: {fileID: 5669017403407370251, guid: 17de0296ad4ad2d429dcd9569a2b9eaf, type: 3}
+  cardPrefab: {fileID: 5669017403407370251, guid: 6ea81df14376ece418794e818c6a3c52, type: 3}
   CardSilhuettePrefab: {fileID: 7201245464326530442, guid: 0aca31f05be85004589cb439343c8e47, type: 3}
   CardIconPrefab: {fileID: 2384388191409893405, guid: 8c15f1824d5c97c409fbeeffc7497d57, type: 3}
 --- !u!4 &384660693
