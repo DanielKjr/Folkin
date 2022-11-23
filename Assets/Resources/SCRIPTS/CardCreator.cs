@@ -89,7 +89,6 @@ public class CardCreator : MonoBehaviour
         var cardCanvas = card.GetComponentInChildren<Canvas>();
 
         CanvasSetup();
-        
 
 
         iconTags = iconValues;
@@ -103,10 +102,9 @@ public class CardCreator : MonoBehaviour
                 cardPaper.color = Color.white;
                 break;
         }
-
         CreateSilhuette();
         CreateIcons();
-        PlayerHand
+        //PlayerHand
         player.AddToHand(card);
 
         void CreateSilhuette()
@@ -151,7 +149,7 @@ public class CardCreator : MonoBehaviour
                     iconOffsetY = -149;
                     iconCount = 0;
                 }
-                Destroy(icon);
+                //Destroy(icon);
             }
             
 
@@ -162,7 +160,7 @@ public class CardCreator : MonoBehaviour
             cardCanvas.renderMode = RenderMode.WorldSpace;
             cardCanvas.transform.position = new Vector2(0, 0);
 
-            float s = 0.02f;
+            float s = 0.01f;
             cardCanvas.transform.localScale = new Vector3(s, s, s); //Why must i do this? Why not scale=0.02f ??
         }
 
