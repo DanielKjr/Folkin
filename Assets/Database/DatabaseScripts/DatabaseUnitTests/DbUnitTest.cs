@@ -21,12 +21,12 @@ public class DbUnitTest
 
         //Arrange
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=CardDatabase.db; Version=3; New=false");
+        var provider = new DatabaseProvider("Data Source=CardDatabase.db; Version=3; New=false");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
-        CardData card = new CardData("Axe", "Chop chop", "Skill", TagType.SKILL, "Axe", new int[2] { 1, 2 }, "Axe");
-        repository.AddCard(2, card);
+      //  CardData card = new CardData("Axe", "Chop chop", "Skill", TagType.SKILL, "Axe", new int[2] { 1, 2 }, "Axe");
+      //  repository.AddCard(2, card);
         var result = repository.GetAllCards();
 
         Assert.IsNotNull(result);
@@ -42,7 +42,7 @@ public class DbUnitTest
 
         //Arrange
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
@@ -52,8 +52,14 @@ public class DbUnitTest
         var result = repository.FindCard(card);
 
         Assert.IsNotNull(result);
+        Assert.AreEqual("TitleText", result.TitleText);
+        Assert.AreEqual("DescriptionText", result.DescriptionText);
+        Assert.AreEqual("CardType", result.TypeText);
         Assert.AreEqual(TagType.ITEM, result.TType);
-
+        Assert.AreEqual("TagText", result.TagText);
+        Assert.AreEqual(3, result.IconValues[0]);
+        Assert.AreEqual(5, result.IconValues[1]);
+        Assert.AreEqual("Axe", result.SpritePath);
         repository.Close();
     }
 
@@ -64,7 +70,7 @@ public class DbUnitTest
 
         //Arrange
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
@@ -98,7 +104,7 @@ public class DbUnitTest
 
         //Arrange
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
@@ -123,7 +129,7 @@ public class DbUnitTest
 
         //Arrange
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
@@ -147,7 +153,7 @@ public class DbUnitTest
         ICardRepository repository;
 
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
@@ -180,7 +186,7 @@ public class DbUnitTest
         ICardRepository repository;
 
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
@@ -210,7 +216,7 @@ public class DbUnitTest
         ICardRepository repository;
 
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
         Deck deck = new Deck();
@@ -243,7 +249,7 @@ public class DbUnitTest
         ICardRepository repository;
 
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
         Deck deck = new Deck();
@@ -276,7 +282,7 @@ public class DbUnitTest
         ICardRepository repository;
 
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
@@ -297,7 +303,7 @@ public class DbUnitTest
         ICardRepository repository;
 
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
@@ -319,7 +325,7 @@ public class DbUnitTest
         ICardRepository repository;
 
         var mapper = new CardMapper();
-        var provider = new SQLiteDatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
