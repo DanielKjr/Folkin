@@ -94,7 +94,6 @@ public class CardCreator : MonoBehaviour
         CanvasSetup();
 
 
-        iconTags = iconValues;
 
         Image cardPaper = cardCanvas.GetComponentInChildren<Image>();
         iconValues = iconPaths;
@@ -118,19 +117,7 @@ public class CardCreator : MonoBehaviour
 
         void CreateSilhuette()
         {
-            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hj�lp af path'en dertil i string form. tager fat i cardsilhuette'ens
-
-            var cardSilhuette = Instantiate(CardSilhuettePrefab, Vector2.zero, Quaternion.identity);
-            var cardSilhuetteImage = cardSilhuette.GetComponent<Image>();
-            
-            Texture2D cardSilhuetteTexture = (Texture2D)Resources.Load(silhuettepath);
-            cardSilhuetteImage.sprite = Sprite.Create(cardSilhuetteTexture, new Rect(0, 0, cardSilhuetteTexture.width, cardSilhuetteTexture.height), new Vector2(0.5f, 0.5f));
-            var cardSilhuetteCanvas = cardCanvas.GetComponentInChildren<Canvas>();
-            cardSilhuette.transform.localScale = new Vector2(cardSilhuetteTexture.width/80, cardSilhuetteTexture.height/80);
-            cardSilhuette.transform.SetParent(cardCanvas.transform, false);
-            
-            RectTransform rt = cardPaper.rectTransform;
-            cardSilhuette.transform.localPosition = new Vector2(cardSilhuetteTexture.width, -cardSilhuetteTexture.height /2.5f);
+          
             //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjćlp af path'en dertil i string form. tager fat i cardsilhuette'ens
 
             //image og laver et sprite til den ud fra det den fandt i folderen. tager fat i canvas'et paa prefabben, og saetter den til at vaere parent
