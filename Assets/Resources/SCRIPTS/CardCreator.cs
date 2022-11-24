@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class CardCreator : MonoBehaviour
 {
-
+    [SerializeField]
+    public Player player;
     private CardCreator instance;
     public CardCreator Instance
     {
@@ -32,6 +33,7 @@ public class CardCreator : MonoBehaviour
     }
 
     // Update is called once per frame
+  
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && spacereleased)
@@ -83,10 +85,17 @@ public class CardCreator : MonoBehaviour
 
     void CreateCard(string title, string type, CardType ttype, string description, string[] tags, string[] iconPaths, string sillhuettePath)
     {
-        //omskriv ikoner til at den først finder dem frem hernede udfra et array af ints den får, når man kalder metoden
+        //omskriv ikoner til at den fÅ™rst finder dem frem hernede udfra et array af ints den fÄºr, nÄºr man kalder metoden
         var card = Instantiate(cardPrefab, new Vector2(5, 5), Quaternion.identity).GetComponent<Card>();
         card.SetCard(title, type, ttype, description, tags, iconPaths, sillhuettePath);
         var cardCanvas = card.GetComponentInChildren<Canvas>();
+
+
+        CanvasSetup();
+
+
+        iconTags = iconValues;
+
         Image cardPaper = cardCanvas.GetComponentInChildren<Image>();
         iconValues = iconPaths;
         switch (ttype)
@@ -98,14 +107,32 @@ public class CardCreator : MonoBehaviour
                 cardPaper.color = Color.white;
                 break;
         }
-
         CreateSilhuette();
         CreateIcons();
+
+        card.gameObject.SetActive(true);
+
+        //PlayerHand
+        player.AddToHand(card);
         card.gameObject.SetActive(true);
 
         void CreateSilhuette()
         {
-            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjælp af path'en dertil i string form. tager fat i cardsilhuette'ens
+            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjï¿½lp af path'en dertil i string form. tager fat i cardsilhuette'ens
+
+            var cardSilhuette = Instantiate(CardSilhuettePrefab, Vector2.zero, Quaternion.identity);
+            var cardSilhuetteImage = cardSilhuette.GetComponent<Image>();
+            
+            Texture2D cardSilhuetteTexture = (Texture2D)Resources.Load(silhuettepath);
+            cardSilhuetteImage.sprite = Sprite.Create(cardSilhuetteTexture, new Rect(0, 0, cardSilhuetteTexture.width, cardSilhuetteTexture.height), new Vector2(0.5f, 0.5f));
+            var cardSilhuetteCanvas = cardCanvas.GetComponentInChildren<Canvas>();
+            cardSilhuette.transform.localScale = new Vector2(cardSilhuetteTexture.width/80, cardSilhuetteTexture.height/80);
+            cardSilhuette.transform.SetParent(cardCanvas.transform, false);
+            
+            RectTransform rt = cardPaper.rectTransform;
+            cardSilhuette.transform.localPosition = new Vector2(cardSilhuetteTexture.width, -cardSilhuetteTexture.height /2.5f);
+            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjÄ‡lp af path'en dertil i string form. tager fat i cardsilhuette'ens
+
             //image og laver et sprite til den ud fra det den fandt i folderen. tager fat i canvas'et paa prefabben, og saetter den til at vaere parent
  
             Image cardPaper = cardCanvas.GetComponentInChildren<Image>();
@@ -180,8 +207,19 @@ public class CardCreator : MonoBehaviour
                     iconOffsetY += 76;
                     iconCount = 0;
                 }
-                Destroy(icon);
+                //Destroy(icon);
             }
         }
+
+        void CanvasSetup()
+        {
+            cardCanvas.renderMode = RenderMode.WorldSpace;
+            cardCanvas.transform.position = new Vector2(0, 0);
+
+            float s = 0.01f;
+            cardCanvas.transform.localScale = new Vector3(s, s, s); //Why must i do this? Why not scale=0.02f ??
+        }
+
+
     }
 }

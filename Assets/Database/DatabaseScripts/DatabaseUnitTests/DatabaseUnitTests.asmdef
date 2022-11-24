@@ -9,8 +9,7 @@
         "DbScripts"
     ],
     "includePlatforms": [
-        "Editor",
-        "WebGL"
+        "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
