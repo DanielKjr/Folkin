@@ -8,18 +8,7 @@ public class CardCreator : MonoBehaviour
 {
     [SerializeField]
     public Player player;
-    private CardCreator instance;
-    public CardCreator Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new CardCreator();
-            }
-            return instance;
-        }
-    }
+ 
     public List<string> allIconPaths = new List<string>();
     public Card cardPrefab;
     public GameObject CardSillhuettePrefab;
@@ -38,7 +27,7 @@ public class CardCreator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && spacereleased)
         {
-            CreateCard("Axe", "Melee Weapon", CardType.BASECARD, "A sharp lump of metal attached to a wooden heft", new string[2] { "#Weapon | Medium", "Wooden | metallic" }, new string[1] { "ICONS/Asset 706logo" } , "SILLHUETTES/Asset 684logo");
+          //  CreateCard("Axe", "Melee Weapon", CardType.BASECARD, "A sharp lump of metal attached to a wooden heft", new string[2] { "#Weapon | Medium", "Wooden | metallic" }, new string[1] { "ICONS/Asset 706logo" } , "SILLHUETTES/Asset 684logo");
             //         string, string, enum, string, string, int[], string
         }
         if (Input.GetKeyUp(KeyCode.Space))
@@ -83,7 +72,7 @@ public class CardCreator : MonoBehaviour
         }
     }
 
-    void CreateCard(string title, string type, CardType ttype, string description, string[] tags, string[] iconPaths, string sillhuettePath)
+   public void CreateCard(string title, string type, CardType ttype, string description, string[] tags, string[] iconPaths, string sillhuettePath)
     {
         //omskriv ikoner til at den fřrst finder dem frem hernede udfra et array af ints den fĺr, nĺr man kalder metoden
         var card = Instantiate(cardPrefab, new Vector2(5, 5), Quaternion.identity).GetComponent<Card>();
