@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -20,6 +21,10 @@ public class SillhuetteStage : MonoBehaviour
     public string sillhuettePath;
     public string noSillhuettePath = "nopesry";
     public bool SillhuetteMade = false;
+
+    private ICardRepository repository;
+    private CardMapper mapper;
+    private DatabaseProvider provider;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +34,9 @@ public class SillhuetteStage : MonoBehaviour
         AddButtons();
         OrderButtons();
         AddAllButtonListeners();
+        mapper = new CardMapper();
+        provider = new DatabaseProvider("Data Source=CardDatabase.db; Version=3; New=False");
+        repository = new CardRepository(provider, mapper);
     }
 
     // Update is called once per frame
@@ -129,12 +137,25 @@ public class SillhuetteStage : MonoBehaviour
             gameObject.SetActive(false);
             CreateCardbutton.SetActive(true);
             Card.gameObject.SetActive(false);
+            SaveCardToDatabase(Card);
+            //Metode går her
         }
         else
         {
 
         }
 
+    }
+
+    private  void SaveCardToDatabase(Card card)
+    {
+       
+        CardData cardToSave = new CardData(card.titleText.text, card.descriptionText.text, card.typeText.text, card.TType, card.tagTexts, card.iconValues, card.SpritePath);
+        repository.Open();
+        repository.AddCard(1, cardToSave);
+
+
+        repository.Close();
     }
     public void ChangeSillhuettePath(string filePath)
     {

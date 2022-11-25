@@ -38,6 +38,7 @@ public class TagStage : MonoBehaviour
             tagList.Add(textInput);
             gameObject.SetActive(false);
             iconsStage.gameObject.SetActive(true);
+            Card.tagTexts = tagList.ToArray();
         }
         else
         {
