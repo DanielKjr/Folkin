@@ -52,10 +52,9 @@ public class SillhuetteStage : MonoBehaviour
         List<string> iconPaths = new List<string>();
         foreach (Texture2D texture in textures)
         {
-            string s = AssetDatabase.GetAssetPath(textures[i]);
-            string subS = s.Substring(17);
-            string subSubS = subS.Substring(0, subS.Length - 4);
-            iconPaths.Add(subSubS);
+            string s = texture.name;
+            string plusS = "SILLHUETTES/" + s;
+            iconPaths.Add(plusS);
             i++;
         }
         AllSillhuettePaths = iconPaths;

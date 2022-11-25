@@ -36,12 +36,27 @@ public class CardLoader : MonoBehaviour
 
         repository.Close();
     }
+
+    public void LoadAllCards(int Id)
+    {
+        repository.Open();
+        List<CardData> cards = new List<CardData>();
+        cards = repository.GetAllCards(Id);
+     
+        foreach (CardData card in cards)
+        {
+            creator.CreateCard(card.TitleText, card.TypeText, card.CType, card.DescriptionText, card.TagText, card.IconPath, card.SpritePath);
+          
+        }
+
+        repository.Close();
+    }
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && spacereleased)
         {
-            LoadAllCards();
+          //  LoadAllCards();
             //         string, string, enum, string, string, int[], string
         }
         if (Input.GetKeyUp(KeyCode.Space))

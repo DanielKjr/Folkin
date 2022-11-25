@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,10 +41,9 @@ public class IconsStage : MonoBehaviour
         List<string> iconPaths = new List<string>();
         foreach (Texture2D texture in textures)
         {
-            string s = AssetDatabase.GetAssetPath(textures[i]);
-            string subS = s.Substring(17);
-            string subSubS = subS.Substring(0, subS.Length - 4);
-            iconPaths.Add(subSubS);
+            string s = texture.name;
+            string plusS = "ICONS/" + s;
+            iconPaths.Add(plusS);
             i++;
         }
         AllIconPaths = iconPaths;
