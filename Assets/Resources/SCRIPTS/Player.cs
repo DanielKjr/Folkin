@@ -8,15 +8,29 @@ public class Player : MonoBehaviour
     public string playerName;
     public int HP;
     public List<Card> hand = new List<Card>();
+    /// <summary>
+    /// Add card to player hand
+    /// </summary>
+    /// <param name="card"></param>
     public void AddToHand(Card card)
     {
         hand.Add(card);
         AutoShiftCards();
     }
+    /// <summary>
+    /// Remove card from player hand
+    /// </summary>
+    /// <param name="card"></param>
     public void RemoveFromHand(Card card)
     {
         hand.Remove(card);
     }
+    /// <summary>
+    /// Scale cards in players hand
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="newScale"></param>
+    /// <param name="ScaleAllCards"></param>
     public void CardScale(Card card, float newScale, bool ScaleAllCards)
     {
         if (!ScaleAllCards)
@@ -33,11 +47,19 @@ public class Player : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// Move cards in players hand
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="newPosition"></param>
     public void CardMove(Card card, Vector2 newPosition)
     {
         var cardCanvas = card.GetComponentInChildren<Canvas>();
         cardCanvas.transform.position = newPosition;
     }
+    /// <summary>
+    /// Auto called from AddToHand, scales and moves cards to fit screen.
+    /// </summary>
     private void AutoShiftCards()
     {
         int offset = 3; //CHANGE OFFSET HERE <-----
@@ -54,18 +76,11 @@ public class Player : MonoBehaviour
                     x = 1;
                     y -= 2;
                 }
-                //CardMove(hand[i], new Vector2((i * offset) - count + 1, 0));
-                Mover(hand[i], x, offset, (int)y);
+                CardMove(hand[i], new Vector2((x * offset) - 10, y));
             }
-            float scale = 0.01f;
-            float posY = -1f * y;
-            float math = posY / 1000;
-            float mather = scale - math;
+            float standardScale = 0.01f;
+            float mather = standardScale - (-1f*y)/1000;
             CardScale(null, mather, true);
         }
-    }
-    private void Mover(Card card, int pos, int offset, int y)
-    {
-        CardMove(card, new Vector2((pos * offset) - 10, y));
     }
 }
