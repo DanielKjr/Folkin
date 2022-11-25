@@ -33,7 +33,7 @@ public class TagStage : MonoBehaviour
     }
     public void SaveTextInputToCard()
     {
-        if (textInput != null && textInput.Length > 0)
+        if (textInput != null && tagList.Count > 0)
         {
             tagList.Add(textInput);
             

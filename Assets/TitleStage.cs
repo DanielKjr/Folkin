@@ -7,6 +7,8 @@ public class TitleStage : MonoBehaviour
     public Card Card;
     string titleInput;
     public TypeStage typeStage;
+    public bool CardTypeChosen = false;
+    public CardType cardType;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,9 +28,10 @@ public class TitleStage : MonoBehaviour
     }
     public void SaveTitleToCard()
     {
-        if (titleInput != null && titleInput.Length > 0)
+        if (titleInput != null && titleInput.Length > 0 && CardTypeChosen)
         {
             Card.titleText.text = titleInput;
+            Card.CType = cardType;
             typeStage.gameObject.SetActive(true);
             gameObject.SetActive(false);
         }
@@ -37,5 +40,15 @@ public class TitleStage : MonoBehaviour
             
         }
         
+    }
+    public void ChangeCTypeToBlack()
+    {
+        cardType = CardType.SKILLCARD;
+        CardTypeChosen = true;
+    }
+    public void ChangeCTypeToWhite()
+    {
+        cardType = CardType.BASECARD;
+        CardTypeChosen = true;
     }
 }

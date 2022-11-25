@@ -69,7 +69,7 @@ public class IconsStage : MonoBehaviour
     }
     public void SaveInputToCard()
     {
-        if (2 < 3)
+        if (IconsMade)
         {
 
             Card.iconValues = IconValues.ToArray();
