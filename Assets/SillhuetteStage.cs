@@ -138,7 +138,7 @@ public class SillhuetteStage : MonoBehaviour
             CreateCardbutton.SetActive(true);
             Card.gameObject.SetActive(false);
             SaveCardToDatabase(Card);
-            //Metode går her
+ 
         }
         else
         {

@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public string playerName;
     public int HP;
     public List<Card> hand = new List<Card>();
+    
     public void AddToHand(Card card)
     {
         hand.Add(card);
