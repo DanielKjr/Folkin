@@ -36,6 +36,26 @@ public class CardRepository : ICardRepository
         return iconValuesToString;
     }
 
+    public string StringArrayToDBString(string[] stringToSplit)
+    {
+        string tempString = string.Empty;
+        int count = 0;
+
+        for (int i = 0; i < stringToSplit.Length; i++)
+        {
+            tempString += stringToSplit[i];
+            count++;
+
+            if (count != stringToSplit.Length)
+            {
+                tempString += ",";
+            }
+        }
+
+        return tempString;
+
+    }
+
     public void AddCard(int deckId, CardData card)
     {
         var cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
@@ -44,9 +64,9 @@ public class CardRepository : ICardRepository
            $" '{card.TitleText}', " +
            $" '{card.TypeText}'," +
            $" '{(int)card.TType}', " +
-           $" '{card.TagText}'," +
+           $" '{StringArrayToDBString(card.TagText)}'," +
            $" '{card.DescriptionText}'," +
-           $" '{IconArrayToString(card)}'," +
+           $" '{StringArrayToDBString(card.IconPath)}'," +
            $" '{card.SpritePath}')",
            (SqliteConnection)connection);
 
@@ -88,17 +108,17 @@ public class CardRepository : ICardRepository
         var cmd = new SqliteCommand($"DELETE FROM Card WHERE DeckID='{deckId}' AND Title='{cardName}'", (SqliteConnection)connection);
         cmd.ExecuteNonQuery();
         //TODO HER
-        cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
-          $"(null, " +
-          $" '{deckId}', " +
-          $" '{card.TitleText}', " +
-          $" '{card.TypeText}'," +
-          $" '{(int)card.TType}', " +
-          $" '{card.TagText}'," +
-          $" '{card.DescriptionText}'," +
-          $" '{IconArrayToString(card)}'," +
-          $" '{card.SpritePath}')",
-          (SqliteConnection)connection);
+         cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
+             $"(null, " +
+             $" '{deckId}'," +
+             $" '{card.TitleText}', " +
+             $" '{card.TypeText}'," +
+             $" '{(int)card.TType}', " +
+             $" '{StringArrayToDBString(card.TagText)}'," +
+             $" '{card.DescriptionText}'," +
+             $" '{StringArrayToDBString(card.IconPath)}'," +
+             $" '{card.SpritePath}')",
+             (SqliteConnection)connection);
 
         cmd.ExecuteNonQuery();
     }

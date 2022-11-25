@@ -12,7 +12,7 @@ public class DbUnitTest
 
 
 
-   
+
     [Test]
     public void CanAddAndReadFromDbFile()
     {
@@ -25,40 +25,102 @@ public class DbUnitTest
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
-      //  CardData card = new CardData("Axe", "Chop chop", "Skill", TagType.SKILL, "Axe", new int[2] { 1, 2 }, "Axe");
-      //  repository.AddCard(2, card);
+        // CardData card = new CardData("Axe", "Damage", "Action", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
+        //  repository.AddCard(2, card);
+
         var result = repository.GetAllCards();
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(1, result[0].IconValues[0]);
-        Assert.AreEqual(1, result[1].IconValues[0]);
+        Assert.AreEqual("ICONS/ASSET 706logo", result[0].IconPath[0]);
+        Assert.AreEqual("ICONS/ASSET 702logo", result[1].IconPath[1]);
         repository.Close();
     }
 
     [Test]
     public void CanAddCard()
     {
-        ICardRepository repository;
-
         //Arrange
+        ICardRepository repository;
         var mapper = new CardMapper();
         var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
-        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, "TagText", new int[2] { 3, 5 }, "Axe");
-        repository.AddCard(1, card);
+        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
 
+        //Act
+        repository.AddCard(1, card);
         var result = repository.FindCard(card);
 
+        //Assert
         Assert.IsNotNull(result);
         Assert.AreEqual("TitleText", result.TitleText);
         Assert.AreEqual("DescriptionText", result.DescriptionText);
         Assert.AreEqual("CardType", result.TypeText);
         Assert.AreEqual(TagType.ITEM, result.TType);
-        Assert.AreEqual("TagText", result.TagText);
-        Assert.AreEqual(3, result.IconValues[0]);
-        Assert.AreEqual(5, result.IconValues[1]);
+        Assert.AreEqual("TagText", result.TagText[0]);
+        Assert.AreEqual("ICONS/ASSET 706logo", result.IconPath[0]);
+        Assert.AreEqual("ICONS/ASSET 702logo", result.IconPath[1]);
+        Assert.AreEqual("Axe", result.SpritePath);
+        repository.Close();
+    }
+
+    [Test]
+    public void CanAddCardWithOneIconOrTag()
+    {
+        //Arrange
+        ICardRepository repository;
+        var mapper = new CardMapper();
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
+
+        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[1] { "TagText" }, new string[1] { "ICONS/ASSET 706logo" }, "Axe");
+        //Act
+        repository.AddCard(1, card);
+        var result = repository.FindCard(card);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("TitleText", result.TitleText);
+        Assert.AreEqual("DescriptionText", result.DescriptionText);
+        Assert.AreEqual("CardType", result.TypeText);
+        Assert.AreEqual(TagType.ITEM, result.TType);
+        Assert.AreEqual("TagText", result.TagText[0]);
+        Assert.AreEqual("ICONS/ASSET 706logo", result.IconPath[0]);
+        //  Assert.AreEqual("5", result.IconPath[1]);
+        Assert.AreEqual("Axe", result.SpritePath);
+        repository.Close();
+    }
+
+    [Test]
+    public void CanAddCardWithThreeIconOrTag()
+    {
+        //Arrange
+        ICardRepository repository;
+        var mapper = new CardMapper();
+        var provider = new DatabaseProvider("Data Source=:memory:; Version=3; New=True");
+        repository = new CardRepository(provider, mapper);
+        repository.Open();
+
+        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[3] { "TagText", "Text", "MoreText" },
+            new string[3] { "ICONS/ASSET 706logo", "ICONS/ASSET 701logo", "ICONS/ASSET 705logo" }, "Axe");
+        //Act
+        repository.AddCard(1, card);
+        var result = repository.FindCard(card);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("TitleText", result.TitleText);
+        Assert.AreEqual("DescriptionText", result.DescriptionText);
+        Assert.AreEqual("CardType", result.TypeText);
+        Assert.AreEqual(TagType.ITEM, result.TType);
+        Assert.AreEqual("TagText", result.TagText[0]);
+        Assert.AreEqual("Text", result.TagText[1]);
+        Assert.AreEqual("MoreText", result.TagText[2]);
+        Assert.AreEqual("ICONS/ASSET 706logo", result.IconPath[0]);
+        Assert.AreEqual("ICONS/ASSET 701logo", result.IconPath[1]);
+        Assert.AreEqual("ICONS/ASSET 705logo", result.IconPath[2]);
         Assert.AreEqual("Axe", result.SpritePath);
         repository.Close();
     }
@@ -78,21 +140,26 @@ public class DbUnitTest
         deck.Name = "Dummy Deck";
         deck.ID = 2;
         CardData[] cards = new CardData[3];
-        cards[0] = new CardData("Axe", "Damage", "Action", TagType.ITEM, "ChopChop", new int[2] { 3, 5 }, "Axe");
-        cards[1] = new CardData("Sword", "Damage", "CardType", TagType.ITEM, "Poke", new int[2] { 3, 5 }, "Sword");
-        cards[2] = new CardData("Potion", "Heal", "CardType", TagType.ITEM, "Chug", new int[2] { 3, 5 }, "Potion");
+        cards[0] = new CardData("Axe", "Damage", "Action", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
+        cards[1] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
+        cards[2] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
 
         for (int i = 0; i < cards.Length; i++)
         {
             deck.CardDatas.Add(cards[i]);
         }
 
+        //Act
         repository.AddDeck(deck.ID, deck);
 
         var result = repository.FindDeck(deck);
+
+        //Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(2, result.ID);
         Assert.AreEqual(3, result.CardDatas.Count);
+        Assert.AreEqual(TagType.ITEM, result.CardDatas[2].TType);
+        Assert.AreEqual("Dummy Deck", result.Name);
 
         repository.Close();
     }
@@ -109,9 +176,8 @@ public class DbUnitTest
         repository.Open();
 
         //Act
-        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, "TagText", new int[2] { 3, 5 }, "Axe");
+        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
         repository.AddCard(1, card);
-
         var result = repository.FindCard(card);
 
 
@@ -119,6 +185,7 @@ public class DbUnitTest
         Assert.IsNotNull(result);
         Assert.AreEqual("TitleText", result.TitleText);
         Assert.AreEqual(TagType.ITEM, result.TType);
+        Assert.AreEqual(card.IconPath, result.IconPath);
         repository.Close();
     }
 
@@ -134,7 +201,7 @@ public class DbUnitTest
         repository.Open();
 
         //Act
-        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, "TagText", new int[2] { 3, 5 }, "Axe");
+        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
         repository.AddCard(1, card);
 
         var result = repository.FindCard("TitleText");
@@ -144,6 +211,7 @@ public class DbUnitTest
         Assert.IsNotNull(result);
         Assert.AreEqual("TitleText", result.TitleText);
         Assert.AreEqual(TagType.ITEM, result.TType);
+        Assert.AreEqual(1, result.DeckID);
         repository.Close();
     }
 
@@ -158,9 +226,9 @@ public class DbUnitTest
         repository.Open();
 
         CardData[] cards = new CardData[3];
-        cards[0] = new CardData("Axe", "Damage", "Action", TagType.ITEM, "ChopChop", new int[2] { 3, 5 }, "Axe");
-        cards[1] = new CardData("Sword", "Damage", "CardType", TagType.ITEM, "Poke", new int[2] { 3, 5 }, "Sword");
-        cards[2] = new CardData("Potion", "Heal", "CardType", TagType.ITEM, "Chug", new int[2] { 3, 5 }, "Potion");
+        cards[0] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
+        cards[1] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Sword");
+        cards[2] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Potion");
 
         for (int i = 0; i < cards.Length; i++)
         {
@@ -191,9 +259,9 @@ public class DbUnitTest
         repository.Open();
 
         CardData[] cards = new CardData[3];
-        cards[0] = new CardData("Axe", "Damage", "Action", TagType.ITEM, "ChopChop", new int[2] { 3, 5 }, "Axe");
-        cards[1] = new CardData("Sword", "Damage", "CardType", TagType.ITEM, "Poke", new int[2] { 3, 5 }, "Sword");
-        cards[2] = new CardData("Potion", "Heal", "CardType", TagType.ITEM, "Chug", new int[2] { 3, 5 }, "Potion");
+        cards[0] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
+        cards[1] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Sword");
+        cards[2] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Potion");
 
         for (int i = 0; i < cards.Length; i++)
         {
@@ -223,9 +291,10 @@ public class DbUnitTest
         deck.ID = 2;
         deck.Name = "TestDeck";
         CardData[] cards = new CardData[3];
-        cards[0] = new CardData("Axe", "Damage", "Action", TagType.ITEM, "ChopChop", new int[2] { 3, 5 }, "Axe");
-        cards[1] = new CardData("Sword", "Damage", "CardType", TagType.ITEM, "Poke", new int[2] { 3, 5 }, "Sword");
-        cards[2] = new CardData("Potion", "Heal", "CardType", TagType.ITEM, "Chug", new int[2] { 3, 5 }, "Potion");
+        cards[0] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
+        cards[1] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Sword");
+        cards[2] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Potion");
+
 
         for (int i = 0; i < cards.Length; i++)
         {
@@ -256,9 +325,10 @@ public class DbUnitTest
         deck.ID = 1;
         deck.Name = "TestDeck";
         CardData[] cards = new CardData[3];
-        cards[0] = new CardData("Axe", "Damage", "Action", TagType.ITEM, "ChopChop", new int[2] { 3, 5 }, "Axe");
-        cards[1] = new CardData("Sword", "Damage", "CardType", TagType.ITEM, "Poke", new int[2] { 3, 5 }, "Sword");
-        cards[2] = new CardData("Potion", "Heal", "CardType", TagType.ITEM, "Chug", new int[2] { 3, 5 }, "Potion");
+        cards[0] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
+        cards[1] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Sword");
+        cards[2] = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Potion");
+
 
         for (int i = 0; i < cards.Length; i++)
         {
@@ -286,7 +356,7 @@ public class DbUnitTest
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
-        CardData card = new CardData("Axe", "Chopchop", "Skill", TagType.SKILL, "You can swing your axe", new int[2] { 3, 2 }, "Axe");
+        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
         repository.AddCard(1, card);
 
         repository.DeleteCard(card);
@@ -307,8 +377,7 @@ public class DbUnitTest
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
-        CardData card = new CardData("Axe", "Chopchop", "Skill", TagType.SKILL, "You can swing your axe", new int[2] { 3, 2 }, "Axe");
-        repository.AddCard(1, card);
+        CardData card = new CardData("TitleText", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
 
         repository.DeleteCard("Axe");
         var result = repository.FindCard(card);
@@ -329,10 +398,10 @@ public class DbUnitTest
         repository = new CardRepository(provider, mapper);
         repository.Open();
 
-        CardData card = new CardData("Axe", "Chopchop", "Skill", TagType.SKILL, "You can swing your axe", new int[2] { 3, 2 }, "Axe");
+        CardData card = new CardData("Axe", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
         repository.AddCard(1, card);
 
-        CardData newcard = new CardData("Sword", "Schwing", "Skill", TagType.SKILL, "Pokey pokey", new int[2] { 1, 2 }, "Sword");
+        CardData newcard = new CardData("Sword", "DescriptionText", "CardType", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
         repository.EditCard(1, "Axe", newcard);
 
         var result = repository.FindCard(newcard);
