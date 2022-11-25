@@ -18,17 +18,24 @@ public class CardMapper : ICardMapper
             var icon = reader.GetString(7);
             var sprite = reader.GetString(8);
 
-            //divide into strings using commas
-            string[] iconSplit = icon.Split(',');
-            int[] iconValues = new int[iconSplit.Length];
+    
+            string[] iconPathSplit = icon.Split(',');
+            string[] iconPaths = new string[iconPathSplit.Length];
+            string[] tagTextSplit = tagText.Split(",");
+            string[] tagTexts = new string[tagTextSplit.Length];
 
 
-            for (int i = 0; i < iconSplit.Length; i++)
+            for (int i = 0; i < iconPathSplit.Length; i++)
             {
-                iconValues[i] = int.Parse(iconSplit[i]);
+                iconPaths[i] = iconPathSplit[i];
             }
 
-            result.Add(new CardData(title, description, type, (TagType)tag, tagText, iconValues, sprite) { DeckID = deckId });
+            for (int i = 0; i < tagTextSplit.Length; i++)
+            {
+                tagTexts[i] = tagTextSplit[i];
+            }
+
+            result.Add(new CardData(title, description, type, (TagType)tag, tagTexts, iconPaths, sprite) { DeckID = deckId });
         }
 
         return result;
