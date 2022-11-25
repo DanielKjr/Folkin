@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &82447712 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 351100463726040139, guid: d89e4624c7b85d0449f9d72a8c7cd90a, type: 3}
+  m_PrefabInstance: {fileID: 768776088}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d743f95559a914692dbb0c3197139e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &384660691
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,8 +251,8 @@ Canvas:
   m_GameObject: {fileID: 710532696}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 2107601301}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -288,7 +299,7 @@ PrefabInstance:
     - target: {fileID: 1025935862084218173, guid: d89e4624c7b85d0449f9d72a8c7cd90a, type: 3}
       propertyPath: Card
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 82447712}
     - target: {fileID: 1081012547179301339, guid: d89e4624c7b85d0449f9d72a8c7cd90a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -668,6 +679,10 @@ PrefabInstance:
     - target: {fileID: 6514979633846068844, guid: d89e4624c7b85d0449f9d72a8c7cd90a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 194.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533151389693959243, guid: d89e4624c7b85d0449f9d72a8c7cd90a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6743822970720999120, guid: d89e4624c7b85d0449f9d72a8c7cd90a, type: 3}
       propertyPath: m_Pivot.x

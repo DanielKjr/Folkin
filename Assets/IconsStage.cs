@@ -86,16 +86,16 @@ public class IconsStage : MonoBehaviour
     public void OrderButtons()
     {
         int horizontalButtons = 0;
-        int buttonPositionX = 55;
-        int buttonPositionY = 350;
+        int buttonPositionX = -435;
+        int buttonPositionY = -117;
         foreach (Button item in iconButtons)
         {
-            item.transform.position = new Vector2(buttonPositionX, buttonPositionY);
+            item.transform.localPosition = new Vector2(buttonPositionX, buttonPositionY);
             buttonPositionX += 100;
             horizontalButtons++;
             if (horizontalButtons == 4)
             {
-                buttonPositionX = 55;
+                buttonPositionX = -435;
                 buttonPositionY -= 100;
                 horizontalButtons = 0;
             }

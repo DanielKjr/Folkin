@@ -36,7 +36,6 @@ public class TagStage : MonoBehaviour
         if (textInput != null && tagList.Count > 0)
         {
             tagList.Add(textInput);
-            
             gameObject.SetActive(false);
             iconsStage.gameObject.SetActive(true);
         }
@@ -49,9 +48,12 @@ public class TagStage : MonoBehaviour
     public void AddAnotherTag()
     {
         if(textInput != null && textInput.Length > 0)
-        tagList.Add(textInput);
-        Card.tagText.text = StringFromList(tagList);
-        inputField.gameObject.transform.position = new Vector2(inputField.gameObject.transform.position.x, inputField.gameObject.transform.position.y - 25);
+        {
+            tagList.Add(textInput);
+            Card.tagText.text = StringFromList(tagList);
+            inputField.gameObject.transform.position = new Vector2(inputField.gameObject.transform.position.x, inputField.gameObject.transform.position.y - 25);
+        }
+     
         
     }
     string StringFromList(List<string> strings)
