@@ -1,25 +1,28 @@
-﻿public class CardData
-{
-    public int DeckID { get; set; }
-    public string TitleText { get; set; }
-    public string DescriptionText { get; set; }
-    public string TypeText { get; set; }
-    public string TagText { get; set; }
-    public int[] IconValues { get; set; }
-    public string IconString { get; set; }
-    public string SpritePath { get; set; }
-    public CardType CType { get; set; }
-    public TagType TType { get; set; }
+﻿using System;
 
-    public CardData(string titleText, string description, string cardType, TagType tagType, string tagText, int[] icons, string sprite)
+public class CardData
+{
+    public int DeckID { get;  set; }
+    public string TitleText { get; private set; }
+    public string DescriptionText { get; private set; }
+    public string TypeText { get; private set; }
+    public string[] TagText { get; private set; }
+    public int[] IconValues { get; private set; }
+    public string[] IconPath { get; private set; }
+    public string SpritePath { get; private set; }
+    public CardType CType { get; private set; }
+    public TagType TType { get; private set; }
+
+    public CardData(string titleText, string description, string cardType, TagType tagType, string[] tagText, string[] iconPath, string sprite)
     {
         TitleText = titleText;
         DescriptionText = description;
         TypeText = cardType;
         TType = tagType;
         TagText = tagText;
-        IconValues = icons;
+        IconPath = iconPath;
         SpritePath = sprite;
+       
 
     }
 }
