@@ -62,25 +62,23 @@ public class Player : MonoBehaviour
     /// </summary>
     private void AutoShiftCards()
     {
-        int offset = 3; //CHANGE OFFSET HERE <-----
-        float count = hand.Count;
-        if (count > 1)
+        float x = 0;
+        float standardScale = 0.01f;
+        float handCount = hand.Count / 5;
+        float mathScaled = standardScale - handCount / 1000;
+        float cardWidth = 354 * mathScaled;
+        float y = 0;
+        float offset = cardWidth;
+        for (int i = 0; i < (int)hand.Count; i++)
         {
-            int x = 0;
-            float y = 0;
-            for (int i = 0; i < (int)count; i++)
+            x++;
+            if (x * cardWidth > 18)
             {
-                x++;
-                if (x > 6)
-                {
-                    x = 1;
-                    y -= 2;
-                }
-                CardMove(hand[i], new Vector2((x * offset) - 10, y));
+                x = 1;
+                y -= 2;
             }
-            float standardScale = 0.01f;
-            float mather = standardScale - (-1f*y)/1000;
-            CardScale(null, mather, true);
+            CardMove(hand[i], new Vector2((x * offset) - 10, y));
         }
+        CardScale(null, mathScaled, true);
     }
 }
