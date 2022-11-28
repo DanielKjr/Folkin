@@ -12,29 +12,30 @@ public class DbUnitTest
 
 
 
+    //This test is only used to test the actual database file.
+    //as we do not want it to add to the actual file everytime it is tested, it is commented out
+    //[Test]
+    //public void CanAddAndReadFromDbFile()
+    //{
 
-    [Test]
-    public void CanAddAndReadFromDbFile()
-    {
+    //    ICardRepository repository;
 
-        ICardRepository repository;
+    //    //Arrange
+    //    var mapper = new CardMapper();
+    //    var provider = new DatabaseProvider("Data Source=CardDatabase.db; Version=3; New=false");
+    //    repository = new CardRepository(provider, mapper);
+    //    repository.Open();
 
-        //Arrange
-        var mapper = new CardMapper();
-        var provider = new DatabaseProvider("Data Source=CardDatabase.db; Version=3; New=false");
-        repository = new CardRepository(provider, mapper);
-        repository.Open();
+    //     CardData card = new CardData("Axe", "Damage", "Action", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
+    //     repository.AddCard(2, card);
 
-        // CardData card = new CardData("Axe", "Damage", "Action", TagType.ITEM, new string[2] { "TagText", "Text" }, new string[2] { "ICONS/ASSET 706logo", "ICONS/ASSET 702logo" }, "Axe");
-        //  repository.AddCard(2, card);
+    //    var result = repository.GetAllCards();
 
-        var result = repository.GetAllCards();
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual("ICONS/ASSET 706logo", result[0].IconPath[0]);
-        Assert.AreEqual("ICONS/ASSET 702logo", result[1].IconPath[1]);
-        repository.Close();
-    }
+    //    Assert.IsNotNull(result);
+    //    Assert.AreEqual("ICONS/ASSET 706logo", result[0].IconPath[0]);
+    //    Assert.AreEqual("ICONS/ASSET 702logo", result[1].IconPath[1]);
+    //    repository.Close();
+    //}
 
     [Test]
     public void CanAddCard()

@@ -8,7 +8,7 @@ using UnityEngine;
 public interface IDatabaseProvider
 {
     /// <summary>
-    /// Establish connection to database
+    /// Returns a SQLite connection
     /// </summary>
     /// <returns></returns>
     IDbConnection CreateConnection();

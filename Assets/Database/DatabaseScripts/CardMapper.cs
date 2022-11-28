@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class CardMapper : ICardMapper
 {
+    ///<inheritdoc />
     public List<CardData> MapCardsFromReader(SqliteDataReader reader)
     {
         List<CardData> result = new List<CardData>();
