@@ -52,7 +52,7 @@ public class TagStage : MonoBehaviour
         {
             tagList.Add(textInput);
             Card.tagText.text = StringFromList(tagList);
-            inputField.gameObject.transform.position = new Vector2(inputField.gameObject.transform.position.x, inputField.gameObject.transform.position.y - 25);
+            inputField.gameObject.transform.localPosition = new Vector2(inputField.gameObject.transform.localPosition.x, inputField.gameObject.transform.localPosition.y - 25);
         }
      
         

@@ -22,6 +22,7 @@ public class SillhuetteStage : MonoBehaviour
     public string noSillhuettePath = "nopesry";
     public bool SillhuetteMade = false;
 
+    public Player player;
     private ICardRepository repository;
     private CardMapper mapper;
     private DatabaseProvider provider;
@@ -72,13 +73,14 @@ public class SillhuetteStage : MonoBehaviour
             buttonImage.sprite = Sprite.Create(imgTexture, new Rect(0, 0, imgTexture.width, imgTexture.height), new Vector2(0.5f, 0.5f));
             ButtonObj.transform.SetParent(thisCanvas.transform, false);
             button.targetGraphic = buttonImage;
+            buttonImage.preserveAspect = true;
             iconButtons.Add(button);
         }
     }
     public void OrderButtons()
     {
         int horizontalButtons = 0;
-        int buttonPositionX = -435;
+        int buttonPositionX = -407;
         int buttonPositionY = -117;
         foreach (Button item in iconButtons)
         {
@@ -87,7 +89,7 @@ public class SillhuetteStage : MonoBehaviour
             horizontalButtons++;
             if (horizontalButtons == 4)
             {
-                buttonPositionX = -435;
+                buttonPositionX = -407;
                 buttonPositionY -= 100;
                 horizontalButtons = 0;
             }
@@ -97,12 +99,19 @@ public class SillhuetteStage : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
-
+            foreach(Button item in iconButtons)
+            {
+                item.GetComponent<Image>().color = Color.white;
+            }
             if (sillhuettePath == "nopesry" || sillhuettePath != filePath)
             {
                 //ColorBlock colorVar = button.colors;
                 //colorVar.normalColor = Color.blue;
                 //button.colors = colorVar;
+                foreach (Button butt in iconButtons)
+                {
+                    butt.GetComponent<Image>().color = Color.white;
+                }
                 button.GetComponent<Image>().color = Color.green;
                 ChangeSillhuettePath(filePath);
             }
@@ -136,8 +145,8 @@ public class SillhuetteStage : MonoBehaviour
             gameObject.SetActive(false);
             CreateCardbutton.SetActive(true);
             Card.gameObject.SetActive(false);
+
             SaveCardToDatabase(Card);
- 
         }
         else
         {
@@ -195,7 +204,7 @@ public class SillhuetteStage : MonoBehaviour
             cSillhuette.transform.SetParent(cardPaper.transform, false);
             //cSillhuette.transform.localScale = new Vector2(cardSillhuetteTexture.width / 80, cardSillhuetteTexture.height / 80);
             cSillhuette.transform.localPosition = new Vector2(cSillhuette.transform.localPosition.x - cardSillhuetteTexture.width / 2, cSillhuette.transform.localPosition.y + cardSillhuetteTexture.height / 2);
-            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjælp af path'en dertil i string form. tager fat i cardsilhuette'ens
+            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjÃ¦lp af path'en dertil i string form. tager fat i cardsilhuette'ens
             //image og laver et sprite til den ud fra det den fandt i folderen. tager fat i canvas'et paa prefabben, og saetter den til at vaere parent
             SillhuetteMade = true;
         }
