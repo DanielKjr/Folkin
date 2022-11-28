@@ -687,7 +687,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1214093775585525771
 Transform:
   m_ObjectHideFlags: 0
@@ -722,6 +722,7 @@ MonoBehaviour:
   tagText: {fileID: 2540204955167982885}
   iconValues: []
   sillhuette: {fileID: 0}
+  tagTexts: []
 --- !u!1 &9107370182504464358
 GameObject:
   m_ObjectHideFlags: 0

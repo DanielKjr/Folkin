@@ -16,6 +16,7 @@ public class Card : MonoBehaviour
     public string[] iconValues;
     public Image sillhuette;
     public string[] tagTexts;
+    public int ID { get;  set; }
     public string SpritePath { get; set; }
     public CardType CType { get; set; }
     public TagType TType { get; set; }
