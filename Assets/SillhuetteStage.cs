@@ -20,6 +20,7 @@ public class SillhuetteStage : MonoBehaviour
     public string sillhuettePath;
     public string noSillhuettePath = "nopesry";
     public bool SillhuetteMade = false;
+    public Player player;
     // Start is called before the first frame update
     void Start()
     {
@@ -65,13 +66,14 @@ public class SillhuetteStage : MonoBehaviour
             buttonImage.sprite = Sprite.Create(imgTexture, new Rect(0, 0, imgTexture.width, imgTexture.height), new Vector2(0.5f, 0.5f));
             ButtonObj.transform.SetParent(thisCanvas.transform, false);
             button.targetGraphic = buttonImage;
+            buttonImage.preserveAspect = true;
             iconButtons.Add(button);
         }
     }
     public void OrderButtons()
     {
         int horizontalButtons = 0;
-        int buttonPositionX = -435;
+        int buttonPositionX = -407;
         int buttonPositionY = -117;
         foreach (Button item in iconButtons)
         {
@@ -80,7 +82,7 @@ public class SillhuetteStage : MonoBehaviour
             horizontalButtons++;
             if (horizontalButtons == 4)
             {
-                buttonPositionX = -435;
+                buttonPositionX = -407;
                 buttonPositionY -= 100;
                 horizontalButtons = 0;
             }
@@ -90,7 +92,10 @@ public class SillhuetteStage : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
-
+            foreach(Button item in iconButtons)
+            {
+                item.GetComponent<Image>().color = Color.white;
+            }
             if (sillhuettePath == "nopesry" || sillhuettePath != filePath)
             {
                 //ColorBlock colorVar = button.colors;
@@ -133,6 +138,12 @@ public class SillhuetteStage : MonoBehaviour
             gameObject.SetActive(false);
             CreateCardbutton.SetActive(true);
             Card.gameObject.SetActive(false);
+            Card customCard = Instantiate(Card);
+            customCard.gameObject.SetActive(true);
+            customCard.transform.localPosition = new Vector2(-129, -75);
+            player.AddToHand(customCard);
+            player.CardScale(customCard, 0.5f);
+            
         }
         else
         {

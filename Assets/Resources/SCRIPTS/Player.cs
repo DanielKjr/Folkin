@@ -20,7 +20,8 @@ public class Player : MonoBehaviour
     public void CardScale(Card card, float newScale)
     {
         var cardCanvas = card.GetComponentInChildren<Canvas>();
-        cardCanvas.transform.localScale = new Vector3(newScale,newScale,newScale);
+        var cardPaper = card.GetComponentInChildren<Image>();
+        cardPaper.transform.localScale = new Vector3(newScale,newScale,newScale);
     }
     public void CardMove(Card card, Vector2 newPosition)
     {
