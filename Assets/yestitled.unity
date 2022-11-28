@@ -416,6 +416,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardStateHandler
       objectReference: {fileID: 0}
+    - target: {fileID: 3528796224557100575, guid: d89e4624c7b85d0449f9d72a8c7cd90a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 447
+      objectReference: {fileID: 0}
+    - target: {fileID: 3528796224557100575, guid: d89e4624c7b85d0449f9d72a8c7cd90a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 365
+      objectReference: {fileID: 0}
     - target: {fileID: 3986539119112388919, guid: d89e4624c7b85d0449f9d72a8c7cd90a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
