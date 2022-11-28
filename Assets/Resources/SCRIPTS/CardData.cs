@@ -2,6 +2,7 @@
 
 public class CardData
 {
+    public int ID { get; set; }
     public int DeckID { get;  set; }
     public string TitleText { get; private set; }
     public string DescriptionText { get; private set; }

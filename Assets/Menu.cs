@@ -20,7 +20,7 @@ public class Menu : MonoBehaviour
     private ICardRepository repository;
     private CardMapper mapper;
     private DatabaseProvider provider;
-    private bool enterReleased = true;
+
     // Start is called before the first frame update
     void Start()
     {

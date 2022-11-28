@@ -9,6 +9,7 @@ public class CardMapper : ICardMapper
 
         while (reader.Read())
         {
+            var id = reader.GetInt32(0);
             var deckId = reader.GetInt32(1);
             var title = reader.GetString(2);
             var type = reader.GetString(3);
@@ -35,7 +36,7 @@ public class CardMapper : ICardMapper
                 tagTexts[i] = tagTextSplit[i];
             }
 
-            result.Add(new CardData(title, description, type, (TagType)tag, tagTexts, iconPaths, sprite) { DeckID = deckId });
+            result.Add(new CardData(title, description, type, (TagType)tag, tagTexts, iconPaths, sprite) { DeckID = deckId, ID = id });
         }
 
         return result;
