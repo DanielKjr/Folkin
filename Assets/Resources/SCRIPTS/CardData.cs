@@ -1,4 +1,6 @@
-﻿public class CardData
+﻿using System;
+
+public class CardData
 {
     public int DeckID { get;  set; }
     public string TitleText { get; private set; }
@@ -20,6 +22,7 @@
         TagText = tagText;
         IconPath = iconPath;
         SpritePath = sprite;
+       
 
     }
 }

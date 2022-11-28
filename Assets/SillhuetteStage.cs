@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -20,7 +21,11 @@ public class SillhuetteStage : MonoBehaviour
     public string sillhuettePath;
     public string noSillhuettePath = "nopesry";
     public bool SillhuetteMade = false;
+
     public Player player;
+    private ICardRepository repository;
+    private CardMapper mapper;
+    private DatabaseProvider provider;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +35,9 @@ public class SillhuetteStage : MonoBehaviour
         AddButtons();
         OrderButtons();
         AddAllButtonListeners();
+        mapper = new CardMapper();
+        provider = new DatabaseProvider("Data Source=CardDatabase.db; Version=3; New=False");
+        repository = new CardRepository(provider, mapper);
     }
 
     // Update is called once per frame
@@ -45,10 +53,9 @@ public class SillhuetteStage : MonoBehaviour
         List<string> iconPaths = new List<string>();
         foreach (Texture2D texture in textures)
         {
-            string s = AssetDatabase.GetAssetPath(textures[i]);
-            string subS = s.Substring(17);
-            string subSubS = subS.Substring(0, subS.Length - 4);
-            iconPaths.Add(subSubS);
+            string s = texture.name;
+            string plusS = "SILLHUETTES/" + s;
+            iconPaths.Add(plusS);
             i++;
         }
         AllSillhuettePaths = iconPaths;
@@ -138,18 +145,25 @@ public class SillhuetteStage : MonoBehaviour
             gameObject.SetActive(false);
             CreateCardbutton.SetActive(true);
             Card.gameObject.SetActive(false);
-            Card customCard = Instantiate(Card);
-            customCard.gameObject.SetActive(true);
-            customCard.transform.localPosition = new Vector2(-129, -75);
-            player.AddToHand(customCard);
-            player.CardScale(customCard, 0.5f);
-            
+
+            SaveCardToDatabase(Card);
         }
         else
         {
 
         }
 
+    }
+
+    private  void SaveCardToDatabase(Card card)
+    {
+       
+        CardData cardToSave = new CardData(card.titleText.text, card.descriptionText.text, card.typeText.text, card.TType, card.tagTexts, card.iconValues, card.SpritePath);
+        repository.Open();
+        repository.AddCard(1, cardToSave);
+
+
+        repository.Close();
     }
     public void ChangeSillhuettePath(string filePath)
     {
@@ -190,7 +204,7 @@ public class SillhuetteStage : MonoBehaviour
             cSillhuette.transform.SetParent(cardPaper.transform, false);
             //cSillhuette.transform.localScale = new Vector2(cardSillhuetteTexture.width / 80, cardSillhuetteTexture.height / 80);
             cSillhuette.transform.localPosition = new Vector2(cSillhuette.transform.localPosition.x - cardSillhuetteTexture.width / 2, cSillhuette.transform.localPosition.y + cardSillhuetteTexture.height / 2);
-            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjælp af path'en dertil i string form. tager fat i cardsilhuette'ens
+            //instantiere Cardsilhuette prefabben. finder Texturen i Silhuette-folderen ved hjÃ¦lp af path'en dertil i string form. tager fat i cardsilhuette'ens
             //image og laver et sprite til den ud fra det den fandt i folderen. tager fat i canvas'et paa prefabben, og saetter den til at vaere parent
             SillhuetteMade = true;
         }

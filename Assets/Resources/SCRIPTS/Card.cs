@@ -15,6 +15,7 @@ public class Card : MonoBehaviour
     public TextMeshProUGUI tagText;
     public string[] iconValues;
     public Image sillhuette;
+    public string[] tagTexts;
     public string SpritePath { get; set; }
     public CardType CType { get; set; }
     public TagType TType { get; set; }
@@ -33,7 +34,7 @@ public class Card : MonoBehaviour
         this.iconValues = iconPaths;
         //husk at sætte disse inde i prefabben
     }
-    string StringFromList(string[] strings)
+    public string StringFromList(string[] strings)
     {
         var result = new StringBuilder();
         foreach (string s in strings)
@@ -54,4 +55,6 @@ public class Card : MonoBehaviour
     {
         
     }
+
+
 }
