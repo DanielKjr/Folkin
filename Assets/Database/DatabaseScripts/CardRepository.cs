@@ -11,12 +11,23 @@ public class CardRepository : ICardRepository
     private readonly ICardMapper mapper;
     private IDbConnection connection;
 
+    /// <summary>
+    /// Requires references to IDatabaseProvider and ICardMapper to function
+    /// </summary>
+    /// <param name="provider"></param>
+    /// <param name="mapper"></param>
     public CardRepository(IDatabaseProvider provider, ICardMapper mapper)
     {
         this.provider = provider;
         this.mapper = mapper;
     }
 
+    /// <summary>
+    /// Makes an array of int values into a string. 
+    /// Was used in earlier iterations but not anymore.
+    /// </summary>
+    /// <param name="card"></param>
+    /// <returns></returns>
     public string IconArrayToString(CardData card)
     {
         string iconValuesToString = string.Empty;
@@ -35,6 +46,11 @@ public class CardRepository : ICardRepository
         return iconValuesToString;
     }
 
+    /// <summary>
+    /// Makes the inserted string array into a single string divided by commas for the database.
+    /// </summary>
+    /// <param name="stringToSplit"></param>
+    /// <returns></returns>
     public string StringArrayToDBString(string[] stringToSplit)
     {
         string tempString = string.Empty;
@@ -55,6 +71,7 @@ public class CardRepository : ICardRepository
 
     }
 
+    ///<inheritdoc />
     public void AddCard(int deckId, CardData card)
     {
         var cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
@@ -72,6 +89,7 @@ public class CardRepository : ICardRepository
         cmd.ExecuteNonQuery();
     }
 
+    ///<inheritdoc />
     public void AddDeck(int userId, Deck deck)
     {
         var cmd = new SqliteCommand($"DELETE FROM Card WHERE DeckID='{deck.ID}'", (SqliteConnection)connection);
@@ -89,39 +107,42 @@ public class CardRepository : ICardRepository
         }
     }
 
-
+    ///<inheritdoc />
     public void DeleteCard(string name)
     {
         var cmd = new SqliteCommand($"DELETE FROM Card WHERE Title='{name}'", (SqliteConnection)connection);
         cmd.ExecuteNonQuery();
     }
 
+    ///<inheritdoc />
     public void DeleteCard(CardData card)
     {
         var cmd = new SqliteCommand($"DELETE FROM Card WHERE Title='{card.TitleText}'", (SqliteConnection)connection);
         cmd.ExecuteNonQuery();
     }
 
+    ///<inheritdoc />
     public void EditCard(int deckId, string cardName, CardData card)
     {
         var cmd = new SqliteCommand($"DELETE FROM Card WHERE DeckID='{deckId}' AND Title='{cardName}'", (SqliteConnection)connection);
         cmd.ExecuteNonQuery();
         //TODO HER
-         cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
-             $"(null, " +
-             $" '{deckId}'," +
-             $" '{card.TitleText}', " +
-             $" '{card.TypeText}'," +
-             $" '{(int)card.TType}', " +
-             $" '{StringArrayToDBString(card.TagText)}'," +
-             $" '{card.DescriptionText}'," +
-             $" '{StringArrayToDBString(card.IconPath)}'," +
-             $" '{card.SpritePath}')",
-             (SqliteConnection)connection);
+        cmd = new SqliteCommand($"INSERT INTO Card (ID, DeckID, Title, Type, Tag, TagText, Description, Icon, Sprite) VALUES " +
+            $"(null, " +
+            $" '{deckId}'," +
+            $" '{card.TitleText}', " +
+            $" '{card.TypeText}'," +
+            $" '{(int)card.TType}', " +
+            $" '{StringArrayToDBString(card.TagText)}'," +
+            $" '{card.DescriptionText}'," +
+            $" '{StringArrayToDBString(card.IconPath)}'," +
+            $" '{card.SpritePath}')",
+            (SqliteConnection)connection);
 
         cmd.ExecuteNonQuery();
     }
 
+    ///<inheritdoc />
     public CardData FindCard(string name)
     {
         var cmd = new SqliteCommand($"SELECT * FROM Card WHERE Title='{name}'",
@@ -137,6 +158,7 @@ public class CardRepository : ICardRepository
         return result;
     }
 
+    ///<inheritdoc />
     public CardData FindCard(CardData card)
     {
 
@@ -151,6 +173,7 @@ public class CardRepository : ICardRepository
 
     }
 
+    ///<inheritdoc />
     public List<CardData> GetAllCards()
     {
 
@@ -163,6 +186,7 @@ public class CardRepository : ICardRepository
         return result;
     }
 
+    ///<inheritdoc />
     public List<CardData> GetAllCards(int deckId)
     {
         var cmd = new SqliteCommand($"SELECT * FROM Card WHERE DeckID='{deckId}'", (SqliteConnection)connection);
@@ -174,6 +198,9 @@ public class CardRepository : ICardRepository
     }
 
 
+    /// <summary>
+    /// Creates the tables used in unit tests and actual .db file
+    /// </summary>
     private void CreateDBTables()
     {
         var cmd = new SqliteCommand($"CREATE TABLE IF NOT EXISTS User (ID INTEGER PRIMARY KEY, Type STRING)", (SqliteConnection)connection);
@@ -191,6 +218,7 @@ public class CardRepository : ICardRepository
 
     }
 
+    ///<inheritdoc />
     public Deck FindDeck(string name)
     {
         Deck deck = new Deck();
@@ -213,6 +241,7 @@ public class CardRepository : ICardRepository
 
     }
 
+    ///<inheritdoc />
     public Deck FindDeck(Deck deck)
     {
 
@@ -235,7 +264,7 @@ public class CardRepository : ICardRepository
         return deck;
     }
 
-
+    ///<inheritdoc />
     public void Open()
     {
         if (connection == null)
@@ -245,6 +274,8 @@ public class CardRepository : ICardRepository
         connection.Open();
         CreateDBTables();
     }
+
+    ///<inheritdoc />
     public void Close()
     {
         connection.Close();
