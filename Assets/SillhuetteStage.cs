@@ -96,6 +96,10 @@ public class SillhuetteStage : MonoBehaviour
                 //ColorBlock colorVar = button.colors;
                 //colorVar.normalColor = Color.blue;
                 //button.colors = colorVar;
+                foreach (Button butt in iconButtons)
+                {
+                    butt.GetComponent<Image>().color = Color.white;
+                }
                 button.GetComponent<Image>().color = Color.green;
                 ChangeSillhuettePath(filePath);
             }
