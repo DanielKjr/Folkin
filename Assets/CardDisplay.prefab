@@ -147,14 +147,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4220d1728c9ed4ba69570e58c1b612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardButton: {fileID: 0}
   cardButtonPrefab: {fileID: 1162535303819796776}
   titleText: {fileID: 1162535304597052509}
   card: {fileID: 5669017403407370251, guid: 6ea81df14376ece418794e818c6a3c52, type: 3}
   parent: {fileID: 0}
-  cardPrefab: {fileID: 5759719549956999945, guid: 6ea81df14376ece418794e818c6a3c52, type: 3}
   player: {fileID: 0}
   cards: []
+  buttons: []
 --- !u!1 &1162535304597052511
 GameObject:
   m_ObjectHideFlags: 0

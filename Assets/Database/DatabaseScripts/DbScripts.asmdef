@@ -8,7 +8,10 @@
     ],
     "includePlatforms": [
         "Editor",
-        "WebGL"
+        "macOSStandalone",
+        "WebGL",
+        "WindowsStandalone32",
+        "WindowsStandalone64"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

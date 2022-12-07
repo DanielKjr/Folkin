@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,12 +25,13 @@ public class AttachCardToButton : MonoBehaviour
     [SerializeField]
     public Player player;
 
-    public List<Card> cards;
+    public static List<Card> cards = new List<Card>();
+    public static List<GameObject> buttons = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
-        
-       
+
+      
         
     }
 
@@ -49,7 +49,10 @@ public class AttachCardToButton : MonoBehaviour
            var btn = Instantiate(cardButtonPrefab, parent.transform);
             btn.transform.SetParent(parent.transform, false);
            player.hand[i].gameObject.SetActive(false);
+
             btn.GetComponentInChildren<TextMeshProUGUI>().text = player.hand[i].titleText.text;
+            cards.Add(player.hand[i]);
+            buttons.Add(btn);
                    
                       
         }
@@ -57,7 +60,19 @@ public class AttachCardToButton : MonoBehaviour
 
     public void Activate()
     {
-        
+        card = cards.Find(x => x.titleText.text == cardButtonPrefab.GetComponentInChildren<TextMeshProUGUI>().text);
+        foreach (GameObject go in buttons)
+        {
+            foreach (Card card in cards)
+            {
+                if (go.GetComponentInChildren<TextMeshProUGUI>().text == this.card.titleText.text)
+                {
+                    card.gameObject.SetActive(true);
+                }
+            }
+        }
+
+      
     //    player.hand.FindAll(x => x.titleText.text == card.titleText.text).FirstOrDefault().gameObject.SetActive(true);
        // card.gameObject.SetActive(false);
     }
